@@ -1,7 +1,6 @@
 {
   "name": "Partition d'urgence — Traumatisé sévère",
   "short_name": "Partition",
-  "description": "Parcours du traumatisé sévère visualisé comme une partition à 3 pistes (régulation, pré-hospitalier, intra-hospitalier) sur une timeline commune.",
   "lang": "fr",
   "id": "/TEMPO/",
   "start_url": "/TEMPO/",
@@ -11,7 +10,7 @@
   "background_color": "#f8fafc",
   "theme_color": "#e11d48",
   "icons": [
-    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/TEMPO/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/TEMPO/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
