@@ -24,15 +24,15 @@ function mergeValues(
 }
 
 function mergeHeader(local: CaseHeader, remote: CaseHeader): CaseHeader {
-  const out = { ...local } as Record<string, unknown>
-  const rem = remote as Record<string, unknown>
+  const out = { ...local } as unknown as Record<string, unknown>
+  const rem = remote as unknown as Record<string, unknown>
   for (const key of Object.keys(rem)) {
     const rv = rem[key]
     const lv = out[key]
     const localEmpty = lv === undefined || lv === '' || lv === null
     if (rv !== undefined && rv !== '' && localEmpty) out[key] = rv
   }
-  return out as CaseHeader
+  return out as unknown as CaseHeader
 }
 
 export function mergeCases(local: CaseState, remote: CaseState): CaseState {
@@ -51,7 +51,7 @@ export function caseSignature(c: CaseState): string {
     .join('|')
   const head = Object.keys(c.header)
     .sort()
-    .map((k) => `${k}=${JSON.stringify((c.header as Record<string, unknown>)[k])}`)
+    .map((k) => `${k}=${JSON.stringify((c.header as unknown as Record<string, unknown>)[k])}`)
     .join('|')
   return `${head}##${vals}`
 }
