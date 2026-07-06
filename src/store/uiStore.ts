@@ -25,6 +25,10 @@ interface UiStore {
   collapsedTracks: TrackId[]
   toggleTrackCollapsed: (id: TrackId) => void
   setAllCollapsed: (collapsed: boolean) => void
+
+  /** Colonne latérale gauche réduite à un rail d'icônes (gain de place, surtout mobile). */
+  compactRail: boolean
+  toggleCompactRail: () => void
 }
 
 export const useUiStore = create<UiStore>((set) => ({
@@ -45,6 +49,9 @@ export const useUiStore = create<UiStore>((set) => ({
         : [...s.collapsedTracks, id],
     })),
   setAllCollapsed: (collapsed) => set({ collapsedTracks: collapsed ? [...ALL_TRACKS] : [] }),
+
+  compactRail: false,
+  toggleCompactRail: () => set((s) => ({ compactRail: !s.compactRail })),
 }))
 
 /** L'utilisateur peut-il éditer la piste donnée ? (rôle choisi ET piste = rôle actif). */

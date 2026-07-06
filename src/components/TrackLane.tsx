@@ -8,6 +8,7 @@ import { isFilledValue } from '../lib/case'
 import { trackTheme, LEVEL_STYLES } from '../lib/theme'
 import {
   LEFT_COL_W,
+  LEFT_COL_W_COMPACT,
   MINI_GAP,
   MINI_PAD_Y,
   MINI_SIZE,
@@ -16,6 +17,7 @@ import {
   minutesOfAction,
   packStrip,
 } from '../lib/timeline'
+import { sectionIcon } from '../lib/sectionIcons'
 import { canEditTrack, useUiStore } from '../store/uiStore'
 import { useCaseStore } from '../store/caseStore'
 import { ActionCell } from './ActionCell'
@@ -33,6 +35,8 @@ export function TrackLane({ track, derived, totalMinutes, dimmed }: Props) {
   const toggleCollapsed = useUiStore((s) => s.toggleTrackCollapsed)
   const editable = useUiStore((s) => canEditTrack(s.activeRole, s.roleChosen, track.id))
   const roleChosen = useUiStore((s) => s.roleChosen)
+  const compact = useUiStore((s) => s.compactRail)
+  const colW = compact ? LEFT_COL_W_COMPACT : LEFT_COL_W
   const theme = trackTheme(track.color)
   const width = contentWidth(totalMinutes)
 
@@ -41,8 +45,8 @@ export function TrackLane({ track, derived, totalMinutes, dimmed }: Props) {
       {/* Bandeau de la piste */}
       <div className="flex">
         <div
-          className={`sticky left-0 z-20 flex shrink-0 items-center gap-2 border-r border-white/30 px-2 py-1.5 text-sm font-bold ${theme.headerBg} ${theme.headerText}`}
-          style={{ width: LEFT_COL_W }}
+          className={`sticky left-0 z-20 flex shrink-0 items-center gap-1 border-r border-white/30 px-1.5 py-1.5 text-sm font-bold ${theme.headerBg} ${theme.headerText}`}
+          style={{ width: colW }}
         >
           <button
             type="button"
@@ -52,11 +56,11 @@ export function TrackLane({ track, derived, totalMinutes, dimmed }: Props) {
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
           </button>
-          <span className="grow leading-tight">{track.label}</span>
+          {!compact && <span className="grow leading-tight">{track.label}</span>}
           {roleChosen && (
             <span
               title={editable ? 'Vous éditez cette ligne' : 'Lecture seule'}
-              className="flex shrink-0 items-center rounded bg-white/20 p-1"
+              className={`flex shrink-0 items-center rounded bg-white/20 p-1 ${compact ? '' : ''}`}
             >
               {editable ? <Pencil size={12} /> : <Eye size={12} />}
             </span>
@@ -68,7 +72,7 @@ export function TrackLane({ track, derived, totalMinutes, dimmed }: Props) {
       </div>
 
       {collapsed ? (
-        <CollapsedLane track={track} derived={derived} width={width} theme={theme} />
+        <CollapsedLane track={track} derived={derived} width={width} theme={theme} compact={compact} colW={colW} />
       ) : (
         track.sections.map((section) => {
           const acts = actionsOfSection(activeProtocol, section.id)
@@ -78,10 +82,12 @@ export function TrackLane({ track, derived, totalMinutes, dimmed }: Props) {
           return (
             <div key={section.id} className="flex border-t border-slate-100">
               <div
-                className={`sticky left-0 z-10 flex shrink-0 items-center border-r border-slate-200 bg-white px-2 ${theme.laneBg}`}
-                style={{ width: LEFT_COL_W }}
+                className={`sticky left-0 z-10 flex shrink-0 items-center border-r border-slate-200 bg-white px-2 ${
+                  compact ? 'justify-center px-1' : ''
+                } ${theme.laneBg}`}
+                style={{ width: colW }}
               >
-                <SectionChip section={section} effect={derived[`section:${section.id}`]} />
+                <SectionChip section={section} effect={derived[`section:${section.id}`]} compact={compact} />
               </div>
               <div className={`relative grow ${theme.laneBg}`} style={{ minWidth: width, height }}>
                 {placements.map((p) => (
@@ -102,11 +108,15 @@ function CollapsedLane({
   derived,
   width,
   theme,
+  compact,
+  colW,
 }: {
   track: TrackDef
   derived: DerivedUiState
   width: number
   theme: ReturnType<typeof trackTheme>
+  compact: boolean
+  colW: number
 }) {
   const caseState = useCaseStore((s) => s.caseState)
   const openAction = useUiStore((s) => s.openAction)
@@ -119,21 +129,38 @@ function CollapsedLane({
   return (
     <div className="flex border-t border-slate-100">
       <div
-        className={`sticky left-0 z-10 flex shrink-0 flex-col justify-center gap-1 border-r border-slate-200 bg-white px-2 py-1.5 ${theme.laneBg}`}
-        style={{ width: LEFT_COL_W }}
+        className={`sticky left-0 z-10 flex shrink-0 flex-col justify-center gap-1 border-r border-slate-200 bg-white py-1.5 ${
+          compact ? 'items-center px-1' : 'px-2'
+        } ${theme.laneBg}`}
+        style={{ width: colW }}
       >
-        <span className="text-[11px] italic text-slate-400">vue réduite — {acts.length} actions</span>
-        <ul className="flex flex-col gap-0.5">
-          {track.sections.map((s) => (
-            <li
-              key={s.id}
-              className="truncate text-[11px] font-medium leading-tight text-slate-500"
-              title={s.label}
-            >
-              {s.label}
-            </li>
-          ))}
-        </ul>
+        {compact ? (
+          <ul className="flex flex-col items-center gap-1.5">
+            {track.sections.map((s) => {
+              const { Icon, className } = sectionIcon(s.id)
+              return (
+                <li key={s.id} title={s.label} className={`text-slate-400 ${className ?? ''}`}>
+                  <Icon size={16} />
+                </li>
+              )
+            })}
+          </ul>
+        ) : (
+          <>
+            <span className="text-[11px] italic text-slate-400">vue réduite — {acts.length} actions</span>
+            <ul className="flex flex-col gap-0.5">
+              {track.sections.map((s) => (
+                <li
+                  key={s.id}
+                  className="truncate text-[11px] font-medium leading-tight text-slate-500"
+                  title={s.label}
+                >
+                  {s.label}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
       <div className={`relative grow ${theme.laneBg}`} style={{ minWidth: width, height }}>
         {placements.map(({ item, x, top }) => (
@@ -209,12 +236,30 @@ function MiniIcon({
 function SectionChip({
   section,
   effect,
+  compact,
 }: {
   section: SectionDef
   effect?: DerivedUiState[string]
+  compact: boolean
 }) {
   const active = Boolean(effect?.blink || effect?.highlighted)
   const lvl = effect?.level ? LEVEL_STYLES[effect.level] : LEVEL_STYLES.warn
+
+  if (compact) {
+    const { Icon, className } = sectionIcon(section.id)
+    const box = ['grid h-8 w-8 place-items-center rounded-md transition-colors']
+    if (section.alert && active) {
+      box.push(`${lvl.bg} ${lvl.text} ${lvl.ring} ring-2`)
+      if (effect?.blink) box.push('animate-blink')
+    } else {
+      box.push(`text-slate-500 ${className ?? ''}`)
+    }
+    return (
+      <span className={box.join(' ')} title={section.label}>
+        <Icon size={18} />
+      </span>
+    )
+  }
 
   if (!section.alert) {
     return <span className="text-xs font-medium text-slate-600">{section.label}</span>

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { activeProtocol } from '../config'
-import { LEFT_COL_W, computeTotalMinutes, contentWidth, xOfMinute } from '../lib/timeline'
+import { LEFT_COL_W, LEFT_COL_W_COMPACT, computeTotalMinutes, contentWidth, xOfMinute } from '../lib/timeline'
 import { useCaseStore } from '../store/caseStore'
 import { useUiStore } from '../store/uiStore'
 import { useDerivedUiState } from '../store/selectors'
@@ -12,12 +12,14 @@ export function ScoreBoard() {
   const derived = useDerivedUiState()
   const activeRole = useUiStore((s) => s.activeRole)
   const roleChosen = useUiStore((s) => s.roleChosen)
+  const compact = useUiStore((s) => s.compactRail)
+  const colW = compact ? LEFT_COL_W_COMPACT : LEFT_COL_W
 
   const totalMinutes = useMemo(
     () => computeTotalMinutes(activeProtocol, caseState),
     [caseState],
   )
-  const width = LEFT_COL_W + contentWidth(totalMinutes)
+  const width = colW + contentWidth(totalMinutes)
   const delai = caseState.header.delaiEstimeMin ?? 0
 
   return (
@@ -26,7 +28,7 @@ export function ScoreBoard() {
         {delai > 0 && (
           <div
             className="pointer-events-none absolute inset-y-0 z-0 w-px bg-rose-300"
-            style={{ left: LEFT_COL_W + xOfMinute(delai) }}
+            style={{ left: colW + xOfMinute(delai) }}
           />
         )}
         <TimelineRuler totalMinutes={totalMinutes} delaiEstimeMin={delai} />

@@ -3,6 +3,7 @@ import type { ActionDef, CaseState, Protocol } from '../types/model'
 /** Géométrie commune aux 3 pistes : un SEUL repère temporel partagé. */
 export const PX_PER_MIN = 22
 export const LEFT_COL_W = 212 // largeur de la colonne d'étiquettes (sticky)
+export const LEFT_COL_W_COMPACT = 52 // rail d'icônes (colonne réduite)
 export const PILL_W = 196
 export const PILL_H = 44
 export const ROW_GAP = 8
