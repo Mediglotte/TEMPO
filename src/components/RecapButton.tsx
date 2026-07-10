@@ -1,12 +1,13 @@
-import { useState } from 'react'
 import { ListOrdered, Printer, X } from 'lucide-react'
 import { activeProtocol, actionIndex } from '../config'
 import { useCaseStore } from '../store/caseStore'
+import { useUiStore } from '../store/uiStore'
 import { buildRecap, recapPrintHtml } from '../lib/recap'
 import { formatClock } from '../lib/timeline'
 
 export function RecapButton() {
-  const [open, setOpen] = useState(false)
+  const open = useUiStore((s) => s.recapOpen)
+  const setOpen = useUiStore((s) => s.setRecapOpen)
   const caseState = useCaseStore((s) => s.caseState)
   const items = buildRecap(caseState, activeProtocol, actionIndex)
 

@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp, Mic, MicOff, Volume2 } from 'lucide-react'
 import { modeLabel, useVoiceDictation, type VoiceMode } from '../voice/useVoiceDictation'
+import { useUiStore } from '../store/uiStore'
 
 const DOT: Record<VoiceMode, string> = {
   idle: 'bg-slate-400',
@@ -10,7 +10,8 @@ const DOT: Record<VoiceMode, string> = {
 }
 
 export function VoiceControl() {
-  const [open, setOpen] = useState(false)
+  const open = useUiStore((s) => s.voicePanelOpen)
+  const setOpen = useUiStore((s) => s.setVoicePanelOpen)
   const v = useVoiceDictation()
 
   return (

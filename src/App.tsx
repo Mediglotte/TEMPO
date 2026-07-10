@@ -102,8 +102,8 @@ export default function App() {
       <Legend />
 
       <footer className="pb-6 text-center text-[11px] text-slate-400">
-        Prototype « partition d’urgence » · contenu clinique à valider · sources : Vittel, RESUVAL,
-        score ABC, BATT, CRASH-2, Wallace.
+        Prototype « partition d’urgence » · sources : Vittel, RESUVAL, score ABC, BATT, CRASH-2,
+        Wallace.
         <br />
         © Dr Félix AMIOT (SMUR / Urgences / SAMU 50 — CH Saint-Lô) &amp; Dr Pierre BALAZ (BMPM) — propriété intellectuelle réservée.
       </footer>

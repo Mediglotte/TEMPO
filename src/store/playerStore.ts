@@ -11,6 +11,9 @@ interface PlayerStore {
   /** Action en cours de « clic » (pour la mettre en évidence). */
   activeActionId: string | null
   stepCount: number
+  /** Narration à voix haute activée. */
+  voiceOn: boolean
+  toggleVoice: () => void
   play: () => void
   pause: () => void
   restart: () => void
@@ -27,6 +30,8 @@ export const usePlayerStore = create<PlayerStore>((set) => ({
   speed: 1,
   activeActionId: null,
   stepCount: guidedSteps.length,
+  voiceOn: true,
+  toggleVoice: () => set((s) => ({ voiceOn: !s.voiceOn })),
 
   play: () =>
     set((s) => {

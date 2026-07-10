@@ -116,6 +116,6 @@ export function recapPrintHtml(items: RecapItem[], caseState: CaseState): string
     intervenants ? ' · ' + esc(intervenants) : ''
   }</div>
   ${table}
-  <div class="foot">Données anonymes — contenu clinique à valider par le médecin référent. Généré par TEMPO.</div>
+  <div class="foot">Données anonymes. Généré par TEMPO.</div>
   </body></html>`
 }

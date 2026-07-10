@@ -32,7 +32,7 @@ Ne cocher qu'UN seul palier par variable (Âge, PAS, Glasgow).
 Bandes de risque de décès hémorragique : BATT 3–4 = faible (~1 %) · 5–7 = intermédiaire (~5 %) · ≥ 8 = HAUT (~15 %).
 Seuils : ≥ 2 → acide tranexamique préhospitalier (< 3 h) ; ≥ 8 (haut risque) → protocole de transfusion massive + OctaplasLG (choix local).
 Haute cinétique = AVP avec intrusion/éjection/décès dans l'habitacle ou piéton-cycliste percuté, chute > 3 m, blast.
-⚠️ À VALIDER : le BATT est validé pour l'indication de l'ACIDE TRANEXAMIQUE préhospitalier (< 3 h ; risque de décès hémorragique), tandis que l'ABC et le TASH prédisent la transfusion massive. Le seuil ≥ 8 pour déclencher PTM + OctaplasLG est un choix local, à valider par le médecin référent.`
+⚠️ À VALIDER : le BATT est validé pour l'indication de l'ACIDE TRANEXAMIQUE préhospitalier (< 3 h ; risque de décès hémorragique), tandis que l'ABC et le TASH prédisent la transfusion massive. Le seuil ≥ 8 pour déclencher PTM + OctaplasLG est un choix local.`
 
 export const TXA_REMINDER = `Acide tranexamique (TXA) — dans les 3 h suivant le traumatisme (CRASH-2).
 Indication préhosp : risque hémorragique (ex. BATT ≥ 2 : hypotension, tachycardie, mécanisme...).

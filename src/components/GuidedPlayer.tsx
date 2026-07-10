@@ -1,16 +1,21 @@
 import { useEffect } from 'react'
-import { Pause, Play, RotateCcw, X } from 'lucide-react'
-import { GUIDED_BASE_MS, guidedSteps } from '../config/guidedScenario'
+import { Pause, Play, RotateCcw, Volume2, VolumeX, X } from 'lucide-react'
+import { GUIDED_BASE_MS, guidedSteps, speechRate, spokenText } from '../config/guidedScenario'
+import { cancelSpeech, isSynthesisSupported, speak } from '../voice/speech'
 import { useCaseStore } from '../store/caseStore'
+import { useUiStore } from '../store/uiStore'
 import { usePlayerStore } from '../store/playerStore'
+import type { ActionValue } from '../types/model'
 
 const SPEEDS = [0.5, 1, 2]
+const ttsSupported = isSynthesisSupported()
 
 export function GuidedPlayer() {
   const status = usePlayerStore((s) => s.status)
   const index = usePlayerStore((s) => s.index)
   const speed = usePlayerStore((s) => s.speed)
   const stepCount = usePlayerStore((s) => s.stepCount)
+  const voiceOn = usePlayerStore((s) => s.voiceOn)
   const play = usePlayerStore((s) => s.play)
   const pause = usePlayerStore((s) => s.pause)
   const restart = usePlayerStore((s) => s.restart)
@@ -19,28 +24,85 @@ export function GuidedPlayer() {
   const setIndex = usePlayerStore((s) => s.setIndex)
   const finish = usePlayerStore((s) => s.finish)
   const setActive = usePlayerStore((s) => s.setActive)
+  const toggleVoice = usePlayerStore((s) => s.toggleVoice)
   const setValueAt = useCaseStore((s) => s.setValueAt)
+  const setLayout = useUiStore((s) => s.setLayout)
+  const setRecapOpen = useUiStore((s) => s.setRecapOpen)
+  const setVoicePanelOpen = useUiStore((s) => s.setVoicePanelOpen)
 
-  // Moteur de lecture : applique l'étape courante, met en évidence l'action,
-  // fait défiler jusqu'à elle, puis programme l'étape suivante.
+  // Moteur de lecture : applique l'étape (action, bascule d'interface, synthèse),
+  // met en évidence l'action, la fait défiler, LIT la narration à voix haute, puis
+  // passe à la suivante quand la voix se termine (ou après un délai si voix coupée).
   useEffect(() => {
-    if (status !== 'playing') return
+    if (status !== 'playing') {
+      cancelSpeech()
+      return
+    }
     if (index >= guidedSteps.length) {
       finish()
       return
     }
     const step = guidedSteps[index]
-    const startedAt = useCaseStore.getState().caseState.header.caseStartedAt
-    setValueAt(step.actionId, step.value, startedAt + step.offsetMin * 60_000)
-    setActive(step.actionId)
-    requestAnimationFrame(() => {
-      document
-        .querySelector(`[data-action-id="${step.actionId}"]`)
-        ?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
-    })
-    const timer = setTimeout(() => setIndex(index + 1), GUIDED_BASE_MS / speed)
-    return () => clearTimeout(timer)
-  }, [status, index, speed, setValueAt, setActive, setIndex, finish])
+
+    if (step.actionId) {
+      const startedAt = useCaseStore.getState().caseState.header.caseStartedAt
+      setValueAt(step.actionId, step.value as ActionValue, startedAt + (step.offsetMin ?? 0) * 60_000)
+      setActive(step.actionId)
+      requestAnimationFrame(() => {
+        document
+          .querySelector(`[data-action-id="${step.actionId}"]`)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+      })
+    } else {
+      setActive(null)
+    }
+    if (step.layout) setLayout(step.layout)
+    if (step.recap !== undefined) setRecapOpen(step.recap)
+    if (step.voicePanel !== undefined) setVoicePanelOpen(step.voicePanel)
+
+    let cancelled = false
+    let doneTimer: ReturnType<typeof setTimeout> | undefined
+    let safetyTimer: ReturnType<typeof setTimeout> | undefined
+    let advanced = false
+    const advance = () => {
+      if (cancelled || advanced) return
+      advanced = true
+      setIndex(index + 1)
+    }
+    const text = spokenText(step)
+
+    if (voiceOn && ttsSupported && text) {
+      speak(
+        text,
+        undefined,
+        () => {
+          if (cancelled) return
+          doneTimer = setTimeout(advance, 300 / speed)
+        },
+        speechRate(speed),
+      )
+      // Filet de sécurité : si la fin de parole ne se déclenche pas, on avance quand même.
+      const estMs = Math.min(3500 + text.length * 75, 26000)
+      safetyTimer = setTimeout(advance, estMs / speed + 2000)
+    } else {
+      doneTimer = setTimeout(advance, (step.holdMs ?? GUIDED_BASE_MS) / speed)
+    }
+
+    return () => {
+      cancelled = true
+      cancelSpeech()
+      if (doneTimer) clearTimeout(doneTimer)
+      if (safetyTimer) clearTimeout(safetyTimer)
+    }
+  }, [status, index, speed, voiceOn, setValueAt, setActive, setIndex, finish, setLayout, setRecapOpen, setVoicePanelOpen])
+
+  // Referme les panneaux quand on quitte la démo.
+  useEffect(() => {
+    if (status === 'idle') {
+      setRecapOpen(false)
+      setVoicePanelOpen(false)
+    }
+  }, [status, setRecapOpen, setVoicePanelOpen])
 
   if (status === 'idle') {
     return (
@@ -53,9 +115,10 @@ export function GuidedPlayer() {
           <Play size={24} className="ml-1 fill-white" />
         </span>
         <span className="flex flex-col">
-          <span className="text-base font-bold sm:text-lg">Démo guidée — déroulé automatique commenté</span>
+          <span className="text-base font-bold sm:text-lg">Démo guidée — visite commentée à voix haute</span>
           <span className="text-sm text-indigo-100">
-            On « voit » chaque action se cocher pas à pas et les alertes se déclencher en direct (≈ 35 s).
+            Le principe, les salles anonymisées, le déroulé complet, les deux interfaces et la synthèse
+            imprimable — expliqués pas à pas {ttsSupported ? '(avec narration audio)' : ''}.
           </span>
         </span>
         <span className="ml-auto hidden shrink-0 rounded-lg bg-white/15 px-4 py-2 text-sm font-bold ring-1 ring-white/30 sm:block">
@@ -102,6 +165,26 @@ export function GuidedPlayer() {
           <RotateCcw size={15} />
         </button>
 
+        <button
+          type="button"
+          onClick={toggleVoice}
+          disabled={!ttsSupported}
+          title={
+            !ttsSupported
+              ? 'Synthèse vocale non disponible sur ce navigateur'
+              : voiceOn
+                ? 'Couper la narration'
+                : 'Activer la narration'
+          }
+          className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm font-medium ${
+            voiceOn && ttsSupported
+              ? 'border-indigo-300 bg-white text-indigo-700 hover:bg-indigo-100'
+              : 'border-slate-200 bg-white text-slate-400'
+          }`}
+        >
+          {voiceOn && ttsSupported ? <Volume2 size={15} /> : <VolumeX size={15} />}
+        </button>
+
         <div className="flex items-center gap-1 rounded-lg border border-indigo-200 bg-white p-0.5 text-xs">
           {SPEEDS.map((s) => (
             <button
@@ -136,7 +219,7 @@ export function GuidedPlayer() {
       </div>
 
       <p className="mt-2 text-sm leading-snug text-indigo-900">
-        {finished ? 'Démonstration terminée — parcours complet visualisé sur les 3 pistes.' : current.narration}
+        {finished ? 'Démonstration terminée — de l’appel jusqu’au bloc, tous les acteurs sur une même partition.' : current.narration}
       </p>
     </div>
   )

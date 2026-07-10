@@ -15,9 +15,6 @@ export function Sources() {
           </li>
         ))}
       </ul>
-      <p className="mt-2 text-[11px] italic text-slate-400">
-        Contenu clinique à valider par le médecin référent.
-      </p>
     </details>
   )
 }

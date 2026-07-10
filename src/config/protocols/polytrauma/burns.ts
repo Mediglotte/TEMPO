@@ -70,8 +70,8 @@ export const WALLACE_REMINDER = `Règle de Wallace (« règle des 9 ») — surf
 Tête/cou 9 % · chaque membre supérieur 9 % · face antérieure du tronc 18 % · face postérieure du tronc 18 % · chaque membre inférieur 18 % · périnée 1 %.
 Cliquer les zones brûlées (face + dos) ; la somme donne la SCB totale. Ne comptez que les brûlures du 2ᵉ/3ᵉ degré.
 Repère : la paume de la main du patient (doigts inclus) ≈ 1 %.
-⚠️ Adulte. Chez l'enfant, utiliser la table de Lund-Browder (tête proportionnellement plus grande). À valider par le médecin référent.`
+⚠️ Adulte. Chez l'enfant, utiliser la table de Lund-Browder (tête proportionnellement plus grande).`
 
 export const BURN_FLUID_REMINDER = `Remplissage du brûlé grave (SCB > 20 %) — protocole préhospitalier local ici retenu : 20 ml/kg de cristalloïdes (Ringer lactate) sur la 1ʳᵉ heure.
 À relayer en intra-hospitalier par une réanimation guidée sur une formule (ex. Parkland : 4 ml/kg/% SCB sur 24 h, moitié sur les 8 premières heures) et titrée sur la diurèse.
-⚠️ Volumes et schéma à valider par le médecin référent selon le protocole local.`
+⚠️ Volumes et schéma selon le protocole local.`

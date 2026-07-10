@@ -33,6 +33,14 @@ interface UiStore {
   /** Disposition du plateau : 'portee' (frise horizontale) ou 'pupitre' (colonnes de cartes). */
   layout: 'portee' | 'pupitre'
   setLayout: (l: 'portee' | 'pupitre') => void
+
+  /** Ouverture de la synthèse chronologique imprimable (pilotable par la démo). */
+  recapOpen: boolean
+  setRecapOpen: (open: boolean) => void
+
+  /** Ouverture du panneau de dictée vocale (pilotable par la démo). */
+  voicePanelOpen: boolean
+  setVoicePanelOpen: (open: boolean) => void
 }
 
 /** Défaut intelligent : Pupitre (vertical) sur petit écran, Portée (frise) sinon. */
@@ -65,6 +73,12 @@ export const useUiStore = create<UiStore>((set) => ({
 
   layout: defaultLayout(),
   setLayout: (layout) => set({ layout }),
+
+  recapOpen: false,
+  setRecapOpen: (recapOpen) => set({ recapOpen }),
+
+  voicePanelOpen: false,
+  setVoicePanelOpen: (voicePanelOpen) => set({ voicePanelOpen }),
 }))
 
 /** L'utilisateur peut-il éditer la piste donnée ? (rôle choisi ET piste = rôle actif). */

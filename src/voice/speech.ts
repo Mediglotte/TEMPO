@@ -64,23 +64,47 @@ function pickFrenchVoice(): SpeechSynthesisVoice | null {
   return cachedVoice
 }
 
-/** Lit un texte à voix haute (fr-FR). `onDone` est appelé à la fin (ou en cas d'échec). */
-export function speak(text: string, onStart?: () => void, onDone?: () => void): void {
+/**
+ * Lit un texte à voix haute (fr-FR). `onDone` est appelé à la fin (ou en cas d'échec).
+ * Le texte est découpé en phrases : cela évite la coupure vers 15 s observée sur Chrome
+ * pour les longues énonciations, la file d'attente enchaînant les phrases.
+ */
+export function speak(
+  text: string,
+  onStart?: () => void,
+  onDone?: () => void,
+  rate = 1,
+): void {
   if (!isSynthesisSupported() || !text.trim()) {
     onDone?.()
     return
   }
   const synth = window.speechSynthesis
   synth.cancel()
-  const u = new SpeechSynthesisUtterance(text)
-  u.lang = 'fr-FR'
   const voice = pickFrenchVoice()
-  if (voice) u.voice = voice
-  u.rate = 1
-  u.onstart = () => onStart?.()
-  u.onend = () => onDone?.()
-  u.onerror = () => onDone?.()
-  synth.speak(u)
+  const chunks = (text.match(/[^.!?…]+[.!?…]*/g) ?? [text])
+    .map((s) => s.trim())
+    .filter(Boolean)
+  let started = false
+  chunks.forEach((chunk, i) => {
+    const u = new SpeechSynthesisUtterance(chunk)
+    u.lang = 'fr-FR'
+    if (voice) u.voice = voice
+    u.rate = rate
+    if (i === 0) {
+      u.onstart = () => {
+        if (!started) {
+          started = true
+          onStart?.()
+        }
+      }
+    }
+    if (i === chunks.length - 1) {
+      u.onend = () => onDone?.()
+      u.onerror = () => onDone?.()
+    }
+    synth.speak(u)
+  })
 }
 
 export function cancelSpeech(): void {

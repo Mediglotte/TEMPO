@@ -531,7 +531,7 @@ export const actions: ActionDef[] = [
     defaultTimeOffsetMin: 16,
     detail: {
       reminder:
-        'OctaplasLG — plasma humain viro-atténué par solvant-détergent (SD), prêt à l’emploi, groupe-compatible. Alternative/complément aux PFC dans la réanimation hémostatique du choc hémorragique (ratio ≈ 1:1:1). Déclenché ici sur BATT ≥ 8. Posologie et place à valider par le médecin référent selon le protocole local.',
+        'OctaplasLG — plasma humain viro-atténué par solvant-détergent (SD), prêt à l’emploi, groupe-compatible. Alternative/complément aux PFC dans la réanimation hémostatique du choc hémorragique (ratio ≈ 1:1:1). Déclenché ici sur BATT ≥ 8. Posologie et place selon le protocole local.',
     },
   },
   {
