@@ -43,6 +43,7 @@ export const VOICE_NUMERIC: VoiceNumeric[] = [
   { actionId: 'prehosp.acsos::capnie', label: 'Capnie (EtCO₂)', keywords: ['capnie', 'capnimetrie', 'etco2', 'et co2', 'co2 expire'], min: 0, max: 100, unit: 'mmHg' },
   { actionId: 'prehosp.acsos::pam-hemo', label: 'PAM', keywords: ['pam', 'pression arterielle moyenne', 'pression moyenne'], max: 200, unit: 'mmHg' },
   { actionId: 'prehosp.e.temperature', label: 'Température', keywords: ['temperature'], min: 30, max: 45, unit: '°C' },
+  { actionId: 'prehosp.acsos::glycemie', label: 'Glycémie (HGT)', keywords: ['glycemie', 'hgt', 'h g t', 'dextro'], min: 0, max: 40, unit: 'mmol/L' },
 ]
 
 export const VOICE_TOGGLE: VoiceToggle[] = [
@@ -59,7 +60,6 @@ export const VOICE_TOGGLE: VoiceToggle[] = [
   { actionId: 'prehosp.transmission.bilan', label: 'Bilan transmis', keywords: ['bilan transmis', 'bilan a la regulation', 'transmission du bilan'] },
   { actionId: 'prehosp.scores.abc::fast', label: 'FAST', keywords: ['fast', 'e fast', 'efast'] },
   { actionId: 'prehosp.d.anisocorie', label: 'Anisocorie', keywords: ['anisocorie'] },
-  { actionId: 'prehosp.acsos::hyperglycemie', label: 'Hyperglycémie', keywords: ['hyperglycemie'] },
   { actionId: 'prehosp.acsos::hyponatremie', label: 'Hyponatrémie', keywords: ['hyponatremie'] },
 ]
 
