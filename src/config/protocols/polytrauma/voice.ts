@@ -43,7 +43,7 @@ export const VOICE_NUMERIC: VoiceNumeric[] = [
   { actionId: 'prehosp.acsos::capnie', label: 'Capnie (EtCO₂)', keywords: ['capnie', 'capnimetrie', 'etco2', 'et co2', 'co2 expire'], min: 0, max: 100, unit: 'mmHg' },
   { actionId: 'prehosp.acsos::pam-hemo', label: 'PAM', keywords: ['pam', 'pression arterielle moyenne', 'pression moyenne'], max: 200, unit: 'mmHg' },
   { actionId: 'prehosp.e.temperature', label: 'Température', keywords: ['temperature'], min: 30, max: 45, unit: '°C' },
-  { actionId: 'prehosp.acsos::glycemie', label: 'Glycémie (HGT)', keywords: ['glycemie', 'hgt', 'h g t', 'dextro'], min: 0, max: 40, unit: 'mmol/L' },
+  { actionId: 'prehosp.d.glycemie', label: 'Glycémie (HGT)', keywords: ['glycemie', 'hgt', 'h g t', 'dextro'], min: 0, max: 40, unit: 'mmol/L' },
 ]
 
 export const VOICE_TOGGLE: VoiceToggle[] = [

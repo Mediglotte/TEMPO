@@ -252,4 +252,55 @@ export const rules: RuleDef[] = [
       { kind: 'blink', targetId: 'section:intra.bloc', level: 'critical' },
     ],
   },
+
+  /* (13) Pneumothorax / Hémothorax (SMUR) → surbrillance de l'exsufflation / drainage */
+  {
+    id: 'r.pneumothorax-exsufflation',
+    description: 'Pneumothorax / hémothorax → exsufflation / drainage thoracique.',
+    when: { kind: 'equals', actionId: 'prehosp.b.pneumothorax', value: 'oui' },
+    then: [
+      {
+        kind: 'highlight',
+        targetId: 'prehosp.g.exsufflation',
+        level: 'warn',
+        note: 'Pneumothorax / hémothorax → exsufflation / drainage.',
+      },
+    ],
+  },
+
+  /* (14) Trauma bassin (SMUR) → surbrillance de la ceinture pelvienne */
+  {
+    id: 'r.traumabassin-ceinture',
+    description: 'Trauma du bassin → ceinture pelvienne.',
+    when: { kind: 'equals', actionId: 'prehosp.c.traumabassin', value: 'oui' },
+    then: [
+      {
+        kind: 'highlight',
+        targetId: 'prehosp.g.pelvien',
+        level: 'warn',
+        note: 'Trauma bassin → ceinture pelvienne.',
+      },
+    ],
+  },
+
+  /* (15) GCS < 8 (SMUR) → surbrillance de l'intubation */
+  {
+    id: 'r.gcs-intubation',
+    description: 'Glasgow < 8 → intubation (protection des voies aériennes).',
+    when: {
+      kind: 'and',
+      conditions: [
+        { kind: 'filled', actionId: 'prehosp.d.gcs' },
+        { kind: 'lt', actionId: 'prehosp.d.gcs', value: 8 },
+      ],
+    },
+    then: [
+      {
+        kind: 'highlight',
+        targetId: 'prehosp.g.isr',
+        level: 'critical',
+        note: 'GCS < 8 → intubation (protection des voies aériennes).',
+      },
+    ],
+  },
 ]
