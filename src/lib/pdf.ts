@@ -67,7 +67,7 @@ export async function exportCasePdf(caseState: CaseState, protocol: Protocol): P
   const elapsedMs = (h.chronoStoppedAt ?? now) - h.caseStartedAt
   const elapsedMin = Math.max(0, Math.round(elapsedMs / 60000))
   line(`Régulateur : ${h.regulateurName || '—'}    SMUR/VSAV : ${h.smurName || '—'}`, { size: 10 })
-  line(`Service receveur : ${h.serviceReceveur || '—'}    Délai estimé : ${h.delaiEstimeMin ?? '—'} min`, { size: 10 })
+  line(`Service receveur : ${h.serviceReceveur || '—'}`, { size: 10 })
   line(
     `Chrono : ${elapsedMin} min écoulées (départ ${formatClock(h.caseStartedAt)}${h.chronoStoppedAt ? `, arrêt ${formatClock(h.chronoStoppedAt)}` : ''})`,
     { size: 10, gap: 10 },

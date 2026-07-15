@@ -24,9 +24,9 @@ export function minutesOfAction(action: ActionDef, caseState: CaseState): number
   return action.defaultTimeOffsetMin ?? 0
 }
 
-/** Durée totale affichée : englobe le délai estimé ET les actions. */
+/** Durée totale affichée : englobe toutes les actions horodatées. */
 export function computeTotalMinutes(protocol: Protocol, caseState: CaseState): number {
-  let max = caseState.header.delaiEstimeMin ?? 0
+  let max = 0
   for (const action of protocol.actions) {
     max = Math.max(max, minutesOfAction(action, caseState))
   }

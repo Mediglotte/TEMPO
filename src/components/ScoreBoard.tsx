@@ -20,7 +20,6 @@ export function ScoreBoard() {
     [caseState],
   )
   const width = colW + contentWidth(totalMinutes)
-  const delai = caseState.header.delaiEstimeMin ?? 0
   const milestones = [30, 60]
 
   return (
@@ -38,13 +37,7 @@ export function ScoreBoard() {
             </span>
           </div>
         ))}
-        {delai > 0 && (
-          <div
-            className="pointer-events-none absolute inset-y-0 z-0 w-px bg-rose-300"
-            style={{ left: colW + xOfMinute(delai) }}
-          />
-        )}
-        <TimelineRuler totalMinutes={totalMinutes} delaiEstimeMin={delai} />
+        <TimelineRuler totalMinutes={totalMinutes} />
         {activeProtocol.tracks.map((track) => (
           <TrackLane
             key={track.id}

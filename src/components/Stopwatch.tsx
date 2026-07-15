@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Pause, Play, Timer } from 'lucide-react'
+import { Hourglass, Pause, Play, Timer } from 'lucide-react'
 import { useCaseStore } from '../store/caseStore'
 import { canEditTrack, useUiStore } from '../store/uiStore'
 import { formatClock } from '../lib/timeline'
@@ -31,6 +31,7 @@ export function Stopwatch() {
   }, [running])
 
   const elapsed = (stoppedAt ?? now) - caseStartedAt
+  const goldenHourPassed = elapsed >= 60 * 60_000
 
   const stop = () => setHeader({ chronoStoppedAt: Date.now() })
   const resume = () => {
@@ -61,6 +62,15 @@ export function Stopwatch() {
       <div className="font-mono text-5xl font-extrabold leading-none tabular-nums sm:text-6xl">
         {formatElapsed(elapsed)}
       </div>
+
+      {goldenHourPassed && (
+        <span
+          title="Plus de 60 minutes écoulées depuis le début de la prise en charge"
+          className="flex animate-blink items-center gap-1.5 rounded-lg bg-rose-600 px-2.5 py-1.5 text-sm font-bold text-white ring-2 ring-rose-300"
+        >
+          <Hourglass size={15} /> Golden hour
+        </span>
+      )}
 
       <div className="ml-auto flex items-center gap-3">
         <span className={`text-xs ${running ? 'text-slate-300' : 'text-rose-700'}`}>

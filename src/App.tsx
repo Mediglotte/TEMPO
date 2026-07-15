@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { AlertTriangle, Maximize2, Minimize2, RadioTower } from 'lucide-react'
+import { Maximize2, Minimize2, RadioTower } from 'lucide-react'
 import { Logo } from './components/Logo'
 import { CaseHeader } from './components/CaseHeader'
 import { RoleSwitcher } from './components/RoleSwitcher'
@@ -12,6 +12,7 @@ import { RecapButton } from './components/RecapButton'
 import { Sources } from './components/Sources'
 import { MilestoneChime } from './components/MilestoneChime'
 import { GuidedPlayer } from './components/GuidedPlayer'
+import { DemoCaseButton } from './components/DemoCaseButton'
 import { ActionDetailPanel } from './components/ActionDetailPanel'
 import { VoiceControl } from './components/VoiceControl'
 import { RoleGate } from './components/RoleGate'
@@ -55,9 +56,9 @@ export default function App() {
         </p>
       </header>
 
-      <div className="flex items-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-        <AlertTriangle size={15} className="shrink-0" />
-        Prototype de démonstration — données fictives. Ne saisir aucune donnée identifiant un patient.
+      <div className="flex flex-wrap items-center gap-2">
+        <GuidedPlayer />
+        <DemoCaseButton />
       </div>
 
       <Stopwatch />
@@ -88,8 +89,6 @@ export default function App() {
       </div>
 
       <SyncControl />
-
-      <GuidedPlayer />
 
       <MilestoneChime />
 

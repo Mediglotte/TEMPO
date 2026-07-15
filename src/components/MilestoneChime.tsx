@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import { Hourglass } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import { useCaseStore } from '../store/caseStore'
 
 /** Bip d'une seconde. */
@@ -31,20 +30,17 @@ function playBeep() {
 }
 
 /**
- * Suit le temps écoulé depuis le début du cas :
- *  - émet un bip d'1 s au franchissement de 60 min,
- *  - affiche un témoin visuel « Golden hour » clignotant au-delà de 60 min.
+ * Bip d'1 s au franchissement de 60 min (Golden hour).
+ * Le témoin visuel est affiché dans le cadre du chrono (voir Stopwatch).
  */
 export function MilestoneChime() {
   const startedAt = useCaseStore((s) => s.caseState.header.caseStartedAt)
   const armedRef = useRef(false)
   const beepedRef = useRef<number | null>(null)
-  const [passed, setPassed] = useState(false)
 
   useEffect(() => {
     armedRef.current = false
     beepedRef.current = null
-    setPassed(false)
 
     const tick = () => {
       const elapsedMin = (Date.now() - startedAt) / 60000
@@ -54,7 +50,6 @@ export function MilestoneChime() {
         beepedRef.current = startedAt
         playBeep()
       }
-      setPassed(elapsedMin >= 60)
     }
 
     tick()
@@ -62,12 +57,5 @@ export function MilestoneChime() {
     return () => window.clearInterval(id)
   }, [startedAt])
 
-  if (!passed) return null
-
-  return (
-    <div className="flex animate-blink items-center justify-center gap-2 rounded-xl border-2 border-rose-400 bg-rose-50 px-4 py-2 text-sm font-bold text-rose-700 shadow-sm">
-      <Hourglass size={16} />
-      Golden hour dépassée — plus de 60 minutes depuis le début de la prise en charge
-    </div>
-  )
+  return null
 }

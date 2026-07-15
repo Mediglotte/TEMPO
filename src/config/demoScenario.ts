@@ -51,7 +51,6 @@ export function buildDemoCase(now: number): CaseState {
       smurName: 'SMUR Beaujon',
       regulateurName: 'Dr R. — SAMU 92',
       serviceReceveur: 'Déchocage CHU (Niveau I)',
-      delaiEstimeMin: 18,
       caseStartedAt: now,
     },
     values,

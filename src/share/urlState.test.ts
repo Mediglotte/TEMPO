@@ -4,7 +4,7 @@ import { decodeCase, encodeCase } from './urlState'
 
 const sample: CaseState = {
   protocolId: 'polytrauma',
-  header: { smurName: 'SMUR X', delaiEstimeMin: 18, caseStartedAt: 1_700_000_000_000 },
+  header: { smurName: 'SMUR X', caseStartedAt: 1_700_000_000_000 },
   values: {
     'prehosp.c.fast': { value: 'positive', completedAt: 1_700_000_060_000 },
     'prehosp.scores.grade': { value: 'A', completedAt: 1_700_000_120_000 },

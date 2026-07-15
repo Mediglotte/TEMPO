@@ -4,10 +4,9 @@ import { useUiStore } from '../store/uiStore'
 
 interface Props {
   totalMinutes: number
-  delaiEstimeMin?: number
 }
 
-export function TimelineRuler({ totalMinutes, delaiEstimeMin }: Props) {
+export function TimelineRuler({ totalMinutes }: Props) {
   const compact = useUiStore((s) => s.compactRail)
   const toggleCompact = useUiStore((s) => s.toggleCompactRail)
   const colW = compact ? LEFT_COL_W_COMPACT : LEFT_COL_W
@@ -41,17 +40,6 @@ export function TimelineRuler({ totalMinutes, delaiEstimeMin }: Props) {
             <span className="h-2 w-px bg-slate-300" />
           </div>
         ))}
-        {delaiEstimeMin != null && delaiEstimeMin > 0 && (
-          <div
-            className="absolute bottom-0 flex flex-col items-center"
-            style={{ left: xOfMinute(delaiEstimeMin) }}
-          >
-            <span className="whitespace-nowrap rounded bg-rose-600 px-1 text-[9px] font-semibold text-white">
-              arrivée ~{delaiEstimeMin}′
-            </span>
-            <span className="h-2 w-px bg-rose-500" />
-          </div>
-        )}
       </div>
     </div>
   )

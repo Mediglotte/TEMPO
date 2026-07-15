@@ -218,8 +218,6 @@ export interface CaseHeader {
   smurName?: string
   regulateurName?: string
   serviceReceveur?: string
-  /** Délai estimé d'acheminement (min) — allonge visuellement la timeline. */
-  delaiEstimeMin?: number
   /** t0 du cas (epoch ms) : origine de la timeline et du chrono. */
   caseStartedAt: number
   /** Horodatage d'arrêt du chrono (epoch ms) — posé par l'équipe intra-hosp. */

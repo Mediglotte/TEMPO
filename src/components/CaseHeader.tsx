@@ -2,7 +2,6 @@ import { Radio, Truck, Building2, Music2, Shuffle } from 'lucide-react'
 import type { CaseHeader as CaseHeaderType } from '../types/model'
 import { useCaseStore } from '../store/caseStore'
 import { randomComposer } from '../lib/codename'
-import { DelaiEstimeTab } from './DelaiEstimeTab'
 
 interface FieldProps {
   icon: React.ReactNode
@@ -84,7 +83,6 @@ export function CaseHeader() {
           placeholder="Déchocage / SAUV…"
           accent="border-rose-200 bg-rose-50 text-rose-800"
         />
-        <DelaiEstimeTab />
       </div>
     </div>
   )

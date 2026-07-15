@@ -1,15 +1,13 @@
 import { useState } from 'react'
-import { AppWindow, Check, FileDown, Link2, MessageCircle, PlayCircle, RotateCcw } from 'lucide-react'
+import { AppWindow, Check, FileDown, Link2, MessageCircle, RotateCcw } from 'lucide-react'
 import { useCaseStore } from '../store/caseStore'
 import { buildShareUrl, writeCaseToHash } from '../share/urlState'
 import { clearCase } from '../share/persistence'
-import { buildDemoCase } from '../config/demoScenario'
 import { activeProtocol } from '../config'
 import { exportCasePdf } from '../lib/pdf'
 
 export function ShareBar() {
   const caseState = useCaseStore((s) => s.caseState)
-  const loadCase = useCaseStore((s) => s.loadCase)
   const reset = useCaseStore((s) => s.reset)
   const [copied, setCopied] = useState(false)
 
@@ -38,7 +36,6 @@ export function ShareBar() {
     })
   }
 
-  const onDemo = () => loadCase(buildDemoCase(Date.now()))
   const onReset = () => {
     clearCase()
     reset()
@@ -59,9 +56,10 @@ export function ShareBar() {
         type="button"
         onClick={onWhatsApp}
         title="Partager le lien par WhatsApp"
-        className="flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-sm font-semibold text-white hover:brightness-95"
+        aria-label="Partager le lien par WhatsApp"
+        className="flex items-center justify-center rounded-lg bg-[#25D366] p-1.5 text-white hover:brightness-95"
       >
-        <MessageCircle size={15} /> WhatsApp
+        <MessageCircle size={18} />
       </button>
       <button
         type="button"
@@ -70,13 +68,6 @@ export function ShareBar() {
         className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
       >
         <FileDown size={15} /> Exporter PDF
-      </button>
-      <button
-        type="button"
-        onClick={onDemo}
-        className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-      >
-        <PlayCircle size={15} /> Scénario démo
       </button>
       <button
         type="button"
