@@ -100,6 +100,12 @@ export function GuidedPlayer() {
   // Referme les panneaux quand on quitte la démo.
   useEffect(() => {
     if (status === 'idle') {
+      setRecapOpen(false)
+      setVoicePanelOpen(false)
+    }
+  }, [status, setRecapOpen, setVoicePanelOpen])
+
+  if (status === 'idle') {
     return (
       <button
         type="button"
