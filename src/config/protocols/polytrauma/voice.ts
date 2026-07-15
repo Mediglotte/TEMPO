@@ -58,12 +58,19 @@ export const VOICE_TOGGLE: VoiceToggle[] = [
   { actionId: 'prehosp.g.nad', label: 'Noradrénaline', keywords: ['noradrenaline', 'noradre', 'amine'] },
   { actionId: 'prehosp.e.hypothermie', label: 'Prévention hypothermie', keywords: ['hypothermie', 'rechauffement', 'couverture de survie'] },
   { actionId: 'prehosp.transmission.bilan', label: 'Bilan transmis', keywords: ['bilan transmis', 'bilan a la regulation', 'transmission du bilan'] },
-  { actionId: 'prehosp.scores.abc::fast', label: 'FAST', keywords: ['fast', 'e fast', 'efast'] },
   { actionId: 'prehosp.d.anisocorie', label: 'Anisocorie', keywords: ['anisocorie'] },
   { actionId: 'prehosp.acsos::hyponatremie', label: 'Hyponatrémie', keywords: ['hyponatremie'] },
 ]
 
 export const VOICE_SELECT: VoiceSelect[] = [
+  {
+    actionId: 'prehosp.c.fast',
+    label: 'FAST écho',
+    options: [
+      { value: 'positive', label: 'Positive', keywords: ['fast positif', 'fast positive', 'e fast positif', 'efast positif', 'echo positive'] },
+      { value: 'negative', label: 'Négative', keywords: ['fast negatif', 'fast negative', 'e fast negatif', 'efast negatif', 'echo negative'] },
+    ],
+  },
   {
     actionId: 'prehosp.scores.hemodynamique',
     label: 'État hémodynamique',

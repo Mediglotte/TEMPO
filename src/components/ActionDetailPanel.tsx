@@ -5,6 +5,7 @@ import { useCaseStore } from '../store/caseStore'
 import { canEditTrack, useUiStore } from '../store/uiStore'
 import { formatClock } from '../lib/timeline'
 import { BurnBodyMap } from './BurnBodyMap'
+import { DerivedCriteria } from './DerivedCriteria'
 import { EvolutionLog } from './EvolutionLog'
 import { Gauge } from './Gauge'
 
@@ -66,6 +67,8 @@ export function ActionDetailPanel() {
         {action.detail?.widget === 'evolutionLog' && (
           <EvolutionLog actionId={action.id} editable={editable} />
         )}
+
+        {action.type === 'computed' && <DerivedCriteria action={action} />}
 
         {groups.length > 0 && (
           <div className="flex flex-col gap-4">

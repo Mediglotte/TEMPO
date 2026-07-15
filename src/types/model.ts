@@ -70,13 +70,45 @@ export interface ActionDetail {
 }
 
 /** Score calculé à partir d'autres actions (ex. score ABC = somme de 4 items). */
+/**
+ * Critère dérivé d'une valeur du bilan : contribue `points` (défaut 1) au score
+ * si la valeur référencée est renseignée ET satisfait la comparaison.
+ * Permet de câbler les scores (ABC, BATT…) directement sur les chiffres du bilan
+ * (PAS, FC, GCS, FAST…) sans re-cocher de cases.
+ */
+export interface ComputedCriterion {
+  ref: string
+  /** Libellé affiché en lecture seule dans le panneau du score. */
+  label?: string
+  op: 'lt' | 'lte' | 'gt' | 'gte' | 'eq' | 'between'
+  value?: string | number
+  min?: number
+  max?: number
+  points?: number
+}
+
+/**
+ * Critère composite « OU » : rapporte `points` (défaut 1) UNE SEULE FOIS dès qu'au
+ * moins un des sous-critères est satisfait. Sert aux items combinant plusieurs
+ * constantes, ex. BATT respiratoire : FR < 10 OU FR ≥ 30 OU SpO₂ < 90 % (+2).
+ */
+export interface ComputedAnyCriterion {
+  any: ComputedCriterion[]
+  points?: number
+  /** Libellé affiché en lecture seule dans le panneau du score. */
+  label?: string
+}
+
+export type ComputedInput = string | ComputedCriterion | ComputedAnyCriterion
+
 export interface ComputedSpec {
-  inputs: string[] // ids d'actions checkbox/number
+  inputs: ComputedInput[] // ids d'actions checkbox/number, ou critères dérivés du bilan
   method: 'sum' | 'count' | 'ratio'
   /**
    * Poids par input (méthode 'sum' uniquement) : la contribution d'un input vaut
    * `valeur × poids`. Absent ⇒ poids 1 (comportement historique, ex. score ABC).
    * Sert aux scores pondérés comme le BATT (paliers à +1/+2/+5/+14…).
+   * Les critères dérivés portent leur propre `points` (le poids ne s'applique pas).
    */
   weights?: Record<string, number>
 }

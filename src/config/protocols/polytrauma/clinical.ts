@@ -23,12 +23,14 @@ export const GRADE_REMINDER = `Grade de gravité (oriente vers le niveau de cent
 
 export const ABC_REMINDER = `Score ABC (Assessment of Blood Consumption) — prédiction de transfusion massive.
 4 items à 1 point chacun : mécanisme pénétrant · FAST positif · PAS ≤ 90 mmHg · FC ≥ 120 /min.
+FAST, PAS et FC sont repris automatiquement du bilan XABCDE : seul le mécanisme pénétrant se coche ici.
 Seuil : ABC ≥ 2 → activer le protocole de transfusion massive (calcul immédiat, sans biologie).
 Alternative intra-hosp : TASH ≥ 8,5 (pondéré, nécessite Hb / base excess).`
 
 export const BATT_REMINDER = `Score BATT (Bleeding Audit Triage Trauma) — Ageron et al. 2021 — risque de décès par hémorragie.
 Items PONDÉRÉS (score 0–27) : Âge 65–74 ans (+1) / ≥ 75 ans (+2) · PAS < 60 mmHg (+14) / 60–99 mmHg (+5) · Glasgow ≤ 8 (+4) / 9–12 (+3) · FR < 10 ou ≥ 30 /min, ou SpO₂ < 90 % (+2) · FC > 100 /min (+1) · trauma pénétrant (+2) · haute cinétique (+2).
-Ne cocher qu'UN seul palier par variable (Âge, PAS, Glasgow).
+Ne cocher qu'UN seul palier par variable (Âge).
+PAS, Glasgow, FC, FR et SpO₂ sont repris automatiquement du bilan XABCDE (un seul palier retenu par variable) ; restent à cocher : âge et mécanisme (pénétrant, haute cinétique).
 Bandes de risque de décès hémorragique : BATT 3–4 = faible (~1 %) · 5–7 = intermédiaire (~5 %) · ≥ 8 = HAUT (~15 %).
 Seuils : ≥ 2 → acide tranexamique préhospitalier (< 3 h) ; ≥ 8 (haut risque) → protocole de transfusion massive + OctaplasLG (choix local).
 Haute cinétique = AVP avec intrusion/éjection/décès dans l'habitacle ou piéton-cycliste percuté, chute > 3 m, blast.

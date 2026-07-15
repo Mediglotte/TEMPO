@@ -13,7 +13,7 @@ export const rules: RuleDef[] = [
     when: {
       kind: 'and',
       conditions: [
-        { kind: 'isChecked', actionId: 'prehosp.scores.abc::fast' },
+        { kind: 'equals', actionId: 'prehosp.c.fast', value: 'positive' },
         { kind: 'equals', actionId: 'prehosp.scores.hemodynamique', value: 'instable' },
       ],
     },
@@ -146,8 +146,20 @@ export const rules: RuleDef[] = [
     when: {
       kind: 'or',
       conditions: [
-        { kind: 'isChecked', actionId: 'prehosp.scores.abc::pas90' },
-        { kind: 'isChecked', actionId: 'prehosp.scores.abc::fc120' },
+        {
+          kind: 'and',
+          conditions: [
+            { kind: 'filled', actionId: 'prehosp.c.pas' },
+            { kind: 'lte', actionId: 'prehosp.c.pas', value: 90 },
+          ],
+        },
+        {
+          kind: 'and',
+          conditions: [
+            { kind: 'filled', actionId: 'prehosp.c.fc' },
+            { kind: 'gte', actionId: 'prehosp.c.fc', value: 120 },
+          ],
+        },
         { kind: 'equals', actionId: 'prehosp.scores.hemodynamique', value: 'instable' },
       ],
     },

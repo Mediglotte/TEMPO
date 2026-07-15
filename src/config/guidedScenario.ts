@@ -127,10 +127,10 @@ export const guidedSteps: GuidedStep[] = [
     say: "Le Smur contrôle une hémorragie externe par la pose d'un garrot.",
   },
   {
-    actionId: 'prehosp.scores.abc::fast',
-    value: true,
+    actionId: 'prehosp.c.fast',
+    value: 'positive',
     offsetMin: 8,
-    narration: 'SMUR — e-FAST POSITIF coché…',
+    narration: 'SMUR — e-FAST POSITIVE (bilan C)…',
     say: "L'échographie e-FAST est positive.",
   },
   {
@@ -149,19 +149,15 @@ export const guidedSteps: GuidedStep[] = [
     say: 'On complète le score ABC. Premier item : mécanisme pénétrant.',
   },
   {
-    actionId: 'prehosp.scores.abc::pas90',
-    value: true,
     offsetMin: 8,
-    narration: 'SMUR — item ABC : PAS ≤ 90 mmHg.',
-    say: 'Item ABC : pression artérielle systolique inférieure ou égale à 90.',
+    narration: 'SMUR — le score ABC se remplit tout seul depuis le bilan (PAS 82 ≤ 90, FC 128 ≥ 120).',
+    say: 'Nouveauté : les critères du score ABC liés aux constantes se cochent automatiquement à partir du bilan. La tension à 82 et la fréquence cardiaque à 128 valident deux critères, sans rien re-saisir.',
   },
   {
-    actionId: 'prehosp.scores.abc::fc120',
-    value: true,
     offsetMin: 8,
     narration:
-      'SMUR — item ABC : FC ≥ 120 → score ABC = 4 → 💥 l’onglet Transfusion massive clignote sur l’intra-hospitalier.',
-    say: "Item ABC : fréquence cardiaque supérieure ou égale à 120. Le score ABC atteint 4 : l'onglet Transfusion massive se met à clignoter à l'hôpital.",
+      'SMUR — avec le FAST positif et le mécanisme pénétrant, score ABC = 4 → 💥 Transfusion massive clignote sur l’intra-hospitalier.',
+    say: "Avec le FAST positif et le mécanisme pénétrant, le score ABC atteint 4 : l'onglet Transfusion massive se met à clignoter à l'hôpital.",
   },
   {
     actionId: 'prehosp.g.octaplas',

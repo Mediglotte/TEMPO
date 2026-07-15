@@ -23,7 +23,7 @@ describe('moteur — déclencheurs inter-pistes', () => {
   it('(1) FAST+ ET instable → BLOC clignote sur régul et intra-hosp', () => {
     const derived = evaluate(
       polytraumaProtocol,
-      caseWith({ 'prehosp.scores.abc::fast': true, 'prehosp.scores.hemodynamique': 'instable' }),
+      caseWith({ 'prehosp.c.fast': 'positive', 'prehosp.scores.hemodynamique': 'instable' }),
       index,
     )
     expect(derived['section:regul.bloc']?.blink).toBe(true)
@@ -34,7 +34,7 @@ describe('moteur — déclencheurs inter-pistes', () => {
   it('ne déclenche pas le BLOC si FAST+ mais stable', () => {
     const derived = evaluate(
       polytraumaProtocol,
-      caseWith({ 'prehosp.scores.abc::fast': true, 'prehosp.scores.hemodynamique': 'stable' }),
+      caseWith({ 'prehosp.c.fast': 'positive', 'prehosp.scores.hemodynamique': 'stable' }),
       index,
     )
     expect(derived['section:regul.bloc']?.blink).toBeUndefined()
@@ -43,16 +43,16 @@ describe('moteur — déclencheurs inter-pistes', () => {
   it('(2) score ABC ≥ 2 → transfusion massive clignote', () => {
     const derived = evaluate(
       polytraumaProtocol,
-      caseWith({ 'prehosp.scores.abc::penetrant': true, 'prehosp.scores.abc::fast': true }),
+      caseWith({ 'prehosp.scores.abc::penetrant': true, 'prehosp.c.fast': 'positive' }),
       index,
     )
-    expect(resolveValue('prehosp.scores.abc', caseWith({ 'prehosp.scores.abc::penetrant': true, 'prehosp.scores.abc::fast': true }), index)).toBe(2)
+    expect(resolveValue('prehosp.scores.abc', caseWith({ 'prehosp.scores.abc::penetrant': true, 'prehosp.c.fast': 'positive' }), index)).toBe(2)
     expect(derived['section:intra.transfusion']?.blink).toBe(true)
     expect(derived['intra.transfusion.ptm']?.highlighted).toBe(true)
   })
 
   it('ABC = 1 ne déclenche pas la transfusion massive', () => {
-    const derived = evaluate(polytraumaProtocol, caseWith({ 'prehosp.scores.abc::fast': true }), index)
+    const derived = evaluate(polytraumaProtocol, caseWith({ 'prehosp.c.fast': 'positive' }), index)
     expect(derived['section:intra.transfusion']?.blink).toBeUndefined()
   })
 

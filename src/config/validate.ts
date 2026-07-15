@@ -37,8 +37,16 @@ export function validateProtocol(protocol: Protocol): string[] {
   for (const action of protocol.actions) {
     if (action.type === 'computed') {
       for (const input of action.computed?.inputs ?? []) {
-        if (!input.includes('::') && !actionMap.has(input)) {
-          errors.push(`Action calculée « ${action.id} » : input inconnu « ${input} ».`)
+        const refs =
+          typeof input === 'string'
+            ? [input]
+            : 'any' in input
+              ? input.any.map((c) => c.ref)
+              : [input.ref]
+        for (const ref of refs) {
+          if (!ref.includes('::') && !actionMap.has(ref)) {
+            errors.push(`Action calculée « ${action.id} » : input inconnu « ${ref} ».`)
+          }
         }
       }
     }
