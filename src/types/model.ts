@@ -190,12 +190,26 @@ export interface RuleDef {
   then: Effect[]
 }
 
+/** Jalon temporel (minute depuis t0), affiché sur la partition et près du chrono. */
+export interface MilestoneDef {
+  id: string
+  /** Minute depuis le début du cas. */
+  atMin: number
+  /** Étiquette de la ligne verticale sur la timeline (ex. « 60 min »). */
+  label: string
+  /** Badge clignotant près du chrono une fois le jalon franchi (ex. « Golden hour »). */
+  badge?: string
+  /** Bip sonore au franchissement (uniquement s'il est observé en direct). */
+  chime?: boolean
+}
+
 export interface Protocol {
   id: string
   label: string
   tracks: TrackDef[]
   actions: ActionDef[]
   rules: RuleDef[]
+  milestones?: MilestoneDef[]
 }
 
 /* ------------------------------------------------------------------ */

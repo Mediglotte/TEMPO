@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
 import { Hourglass, Pause, Play, Timer } from 'lucide-react'
+import { activeProtocol } from '../config'
+import { useNow } from '../hooks/useNow'
+import { passedBadgeMilestones } from '../lib/milestones'
 import { useCaseStore } from '../store/caseStore'
 import { canEditTrack, useUiStore } from '../store/uiStore'
 import { formatClock } from '../lib/timeline'
@@ -21,23 +23,14 @@ export function Stopwatch() {
   const setHeader = useCaseStore((s) => s.setHeader)
   const canStop = useUiStore((s) => canEditTrack(s.activeRole, s.roleChosen, 'intra'))
 
-  const [now, setNow] = useState(() => Date.now())
   const running = stoppedAt == null
-
-  useEffect(() => {
-    if (!running) return
-    const id = window.setInterval(() => setNow(Date.now()), 1000)
-    return () => window.clearInterval(id)
-  }, [running])
+  const now = useNow(running)
 
   const elapsed = (stoppedAt ?? now) - caseStartedAt
-  const goldenHourPassed = elapsed >= 60 * 60_000
+  const passedBadges = passedBadgeMilestones(activeProtocol.milestones ?? [], elapsed)
 
   const stop = () => setHeader({ chronoStoppedAt: Date.now() })
-  const resume = () => {
-    setNow(Date.now())
-    setHeader({ chronoStoppedAt: undefined })
-  }
+  const resume = () => setHeader({ chronoStoppedAt: undefined })
 
   return (
     <div
@@ -63,14 +56,15 @@ export function Stopwatch() {
         {formatElapsed(elapsed)}
       </div>
 
-      {goldenHourPassed && (
+      {passedBadges.map((m) => (
         <span
-          title="Plus de 60 minutes écoulées depuis le début de la prise en charge"
+          key={m.id}
+          title={`Plus de ${m.atMin} minutes écoulées depuis le début de la prise en charge`}
           className="flex animate-blink items-center gap-1.5 rounded-lg bg-rose-600 px-2.5 py-1.5 text-sm font-bold text-white ring-2 ring-rose-300"
         >
-          <Hourglass size={15} /> Golden hour
+          <Hourglass size={15} /> {m.badge}
         </span>
-      )}
+      ))}
 
       <div className="ml-auto flex items-center gap-3">
         <span className={`text-xs ${running ? 'text-slate-300' : 'text-rose-700'}`}>
