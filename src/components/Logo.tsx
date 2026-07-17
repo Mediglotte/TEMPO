@@ -5,10 +5,10 @@
  * détaillé avec casque / ambulance / H est dans public/logo.svg et les icônes.
  */
 export function Logo({ size = 34, className }: { size?: number; className?: string }) {
-  const INK = '#111827'
+  const INK = 'oklch(0.21 0.032 264.665)'
   const lines = [23.8, 28.4, 33, 37.6, 42.2]
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" className={className} role="img" aria-label="TEMPO — partition d'urgence">
+    <svg width={size} height={size} viewBox="0 0 64 64" className={className} role="img" aria-label="TEMPO — partition d’urgence">
       {lines.map((y, i) => (
         <line key={i} x1="8" y1={y} x2="56" y2={y} stroke={INK} strokeWidth="1.2" strokeLinecap="round" opacity="0.85" />
       ))}

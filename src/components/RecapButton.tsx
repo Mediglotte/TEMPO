@@ -45,7 +45,7 @@ export function RecapButton() {
             <header className="flex items-center gap-2 border-b border-slate-200 px-4 py-3">
               <ListOrdered size={16} className="text-slate-500" />
               <span className="font-bold text-slate-900">Récap chronologique</span>
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-slate-500">
                 {caseState.header.patientCodename ? `Patient ${caseState.header.patientCodename}` : ''}
               </span>
               <div className="ml-auto flex items-center gap-1.5">
@@ -73,7 +73,7 @@ export function RecapButton() {
               ) : (
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-[11px] uppercase tracking-wide text-slate-400">
+                    <tr className="text-start text-[11px] uppercase tracking-wide text-slate-500">
                       <th className="pb-2 pr-2 font-semibold">Heure</th>
                       <th className="pb-2 pr-2 font-semibold">Piste</th>
                       <th className="pb-2 pr-2 font-semibold">Action</th>
@@ -88,7 +88,7 @@ export function RecapButton() {
                         </td>
                         <td className="py-1.5 pr-2 text-slate-500">
                           <span className="block leading-tight">{it.trackLabel}</span>
-                          <span className="block text-[11px] text-slate-400">{it.sectionLabel}</span>
+                          <span className="block text-[11px] text-slate-500">{it.sectionLabel}</span>
                         </td>
                         <td className="py-1.5 pr-2 text-slate-800">{it.label}</td>
                         <td className="py-1.5 font-semibold text-slate-900">{it.valueText}</td>

@@ -11,9 +11,9 @@ function formatValue(action: ActionDef, value: ActionValue): string {
     case 'select':
       return action.options?.find((o) => o.value === value)?.label ?? String(value ?? '')
     case 'computed':
-      return action.id.includes('vittel') ? `${value} critère(s)` : String(value)
+      return action.id.includes('vittel') ? `${value}\u00A0critère(s)` : String(value)
     case 'number':
-      return value != null && value !== '' ? `${value}${action.unit ? ' ' + action.unit : ''}` : ''
+      return value != null && value !== '' ? `${value}${action.unit ? '\u00A0' + action.unit : ''}` : ''
     default:
       return value != null ? String(value) : ''
   }
@@ -66,10 +66,10 @@ export async function exportCasePdf(caseState: CaseState, protocol: Protocol): P
   const now = Date.now()
   const elapsedMs = (h.chronoStoppedAt ?? now) - h.caseStartedAt
   const elapsedMin = Math.max(0, Math.round(elapsedMs / 60000))
-  line(`Régulateur : ${h.regulateurName || '—'}    SMUR/VSAV : ${h.smurName || '—'}`, { size: 10 })
-  line(`Service receveur : ${h.serviceReceveur || '—'}`, { size: 10 })
+  line(`Régulateur\u00A0: ${h.regulateurName || '—'}    SMUR/VSAV\u00A0: ${h.smurName || '—'}`, { size: 10 })
+  line(`Service receveur\u00A0: ${h.serviceReceveur || '—'}`, { size: 10 })
   line(
-    `Chrono : ${elapsedMin} min écoulées (départ ${formatClock(h.caseStartedAt)}${h.chronoStoppedAt ? `, arrêt ${formatClock(h.chronoStoppedAt)}` : ''})`,
+    `Chrono\u00A0: ${elapsedMin}\u00A0min écoulées (départ ${formatClock(h.caseStartedAt)}${h.chronoStoppedAt ? `, arrêt ${formatClock(h.chronoStoppedAt)}` : ''})`,
     { size: 10, gap: 10 },
   )
 
@@ -90,7 +90,7 @@ export async function exportCasePdf(caseState: CaseState, protocol: Protocol): P
     for (const { a, value, at } of rows) {
       const time = at != null ? formatClock(at) : '—'
       const val = formatValue(a, value)
-      line(`[${time}]  ${a.label}${val ? ` : ${val}` : ''}`, { size: 10 })
+      line(`[${time}]  ${a.label}${val ? `\u00A0: ${val}` : ''}`, { size: 10 })
     }
     y += 6
   }

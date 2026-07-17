@@ -15,7 +15,7 @@ export function RoleSwitcher() {
 
   return (
     <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-1 text-sm">
-      <span className="px-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+      <span className="px-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
         Je suis
       </span>
       {ROLES.map((r) => (

@@ -18,10 +18,10 @@ export function RoleGate() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
       <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl">
-        <h2 className="text-xl font-extrabold text-slate-900">Qui êtes-vous sur ce cas ?</h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <h2 className="text-balance text-xl font-extrabold text-slate-900">Qui êtes-vous sur ce cas&nbsp;?</h2>
+        <p className="mt-1 max-w-prose text-pretty text-sm text-slate-500">
           Vous pourrez <strong>renseigner votre ligne</strong> et <strong>lire</strong> les deux autres
-          (modifiable à tout moment). Cela évite d'agir par erreur sur la ligne d'un autre maillon.
+          (modifiable à tout moment). Cela évite d’agir par erreur sur la ligne d’un autre maillon.
         </p>
         <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {CHOICES.map((c) => {
@@ -31,7 +31,7 @@ export function RoleGate() {
                 key={c.id}
                 type="button"
                 onClick={() => chooseRole(c.id)}
-                className={`flex items-center gap-3 rounded-xl border-2 bg-white px-4 py-4 text-left transition-colors ${c.cls}`}
+                className={`flex items-center gap-3 rounded-xl border-2 bg-white px-4 py-4 text-start transition-colors ${c.cls}`}
               >
                 <Icon size={26} className="shrink-0" />
                 <span className="flex flex-col">
@@ -42,7 +42,7 @@ export function RoleGate() {
             )
           })}
         </div>
-        <p className="mt-4 text-center text-[11px] text-slate-400">
+        <p className="mt-4 text-pretty text-center text-[11px] text-slate-500">
           Prototype · données fictives · ne saisir aucune donnée identifiant un patient.
         </p>
       </div>

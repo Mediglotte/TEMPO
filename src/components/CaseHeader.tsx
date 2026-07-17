@@ -24,7 +24,7 @@ function IntervenantTab({ icon, label, field, placeholder, accent }: FieldProps)
         value={(value as string) ?? ''}
         placeholder={placeholder}
         onChange={(e) => setHeader({ [field]: e.target.value || undefined })}
-        className="bg-transparent text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:outline-none"
+        className="bg-transparent text-base font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-500 focus:outline-none sm:text-sm"
       />
     </label>
   )
@@ -43,7 +43,7 @@ function PatientTab() {
         value={codename ?? ''}
         placeholder="Nom de code (ex. Chopin, 314…)"
         onChange={(e) => setHeader({ patientCodename: e.target.value || undefined })}
-        className="min-w-0 flex-1 bg-transparent text-base font-bold text-indigo-900 placeholder:text-sm placeholder:font-normal placeholder:text-indigo-400 focus:outline-none"
+        className="min-w-0 flex-1 bg-transparent text-base font-bold text-indigo-900 placeholder:text-sm placeholder:font-normal placeholder:text-indigo-600 focus:outline-none"
       />
       <button
         type="button"
