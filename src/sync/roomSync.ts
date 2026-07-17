@@ -6,6 +6,9 @@ export interface RoomState {
   case: CaseState | null
 }
 
+// Chemin historique du plugin WordPress, conservé comme format unique : le
+// serveur Cloudflare (server/) accepte aussi ce préfixe, si bien que la même
+// URL de base fonctionne quel que soit le serveur pointé.
 function roomUrl(baseUrl: string, code: string): string {
   const base = baseUrl.replace(/\/+$/, '')
   return `${base}/wp-json/tempo/v1/room/${encodeURIComponent(code)}`
