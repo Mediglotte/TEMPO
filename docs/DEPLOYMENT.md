@@ -31,26 +31,28 @@ Historique : la première version de la synchro passait par un mini-plugin WordP
 **Cloudflare Worker + Durable Object** (gratuit, toujours actif, données épinglables en
 juridiction UE), **même API** (`GET/POST /room/:code`), code versionné dans [`server/`](../server/).
 
-### Mise en place (une fois — Félix ou Pierre)
+### État : déjà déployé
 
-1. Créer un compte **Cloudflare** gratuit (e-mail seulement, pas de carte bancaire).
-2. Dans le dossier `server/` du repo :
-   ```bash
-   cd server
-   npm install
-   npx wrangler login       # ouvre le navigateur, autoriser
-   npx wrangler deploy      # publie le Worker
-   ```
-   La commande affiche l'URL publique, de la forme
-   `https://tempo-rooms.<compte>.workers.dev`.
-3. Communiquer cette URL au build de l'app : dans GitHub → *Settings → Secrets and
-   variables → Actions → Variables* (droits admin), créer la **variable de repo**
-   `TEMPO_SYNC_URL` avec cette URL. Relancer le déploiement Pages (*Actions → Run workflow*).
-   → Le bouton de synchro de l'app utilise alors ce serveur par défaut, sans rien demander
-   aux utilisateurs.
-4. Tant que la variable n'existe pas, l'app garde le comportement précédent : champ « URL du
-   serveur » à renseigner manuellement (l'ancien WordPress continue de fonctionner pendant la
-   transition).
+Le Worker est en ligne : **`https://tempo-rooms.felix-amiot.workers.dev`** (compte Cloudflare de
+Félix). Cette URL est **intégrée par défaut dans l'app** (`SyncControl.tsx`) : la synchro
+fonctionne sur le site déployé sans aucun réglage supplémentaire.
+
+### Redéployer / mettre à jour le Worker (si `server/` change)
+
+```bash
+cd server
+npm install
+npx wrangler login       # une fois : ouvre le navigateur, cliquer « Allow »
+npx wrangler deploy      # publie ; réaffiche l'URL
+```
+
+### Déplacer le Worker vers un autre compte (optionnel)
+
+Si le serveur doit changer d'URL (autre compte Cloudflare, domaine dédié…) : ou bien remplacer la
+constante `BUILTIN_SERVER` dans `src/components/SyncControl.tsx`, ou bien — sans toucher au code —
+créer une **variable de repo** `TEMPO_SYNC_URL` (GitHub → *Settings → Secrets and variables →
+Actions → Variables*, droits admin) avec la nouvelle URL : `deploy.yml` l'injecte au build et elle
+prime sur la valeur intégrée. Relancer alors le déploiement Pages (*Actions → Run workflow*).
 
 ### Après bascule
 
@@ -79,12 +81,16 @@ Ces actions demandent les droits **admin** du repo ; Félix (`Namsara`) n'a que 
 3. **Activer les reviews Claude sur les PRs** : *Settings → Secrets and variables → Actions →
    New repository secret* → nom `CLAUDE_CODE_OAUTH_TOKEN`, valeur fournie par Félix (token de
    l'abonnement Claude). Sans ce secret, les 3 workflows de review restent silencieux.
-4. **Variable `TEMPO_SYNC_URL`** : voir « Serveur de salons » ci-dessus (étape 3).
-5. **Recommandé — gouvernance à deux** : soit donner le rôle **Admin** à `Namsara`
+4. **Recommandé — gouvernance à deux** : soit donner le rôle **Admin** à `Namsara`
    (*Settings → Collaborators*), soit créer une **organisation GitHub** commune et y transférer
    le repo (*Settings → Danger Zone → Transfer*). Évite que chaque réglage repasse par une
    seule personne.
-6. **Après la bascule synchro** : désinstaller le plugin WordPress (voir ci-dessus).
+5. **Après confirmation de la synchro Cloudflare** : désinstaller le plugin WordPress
+   `tempo-sync.php` de l'hébergement personnel (il n'a plus de rôle).
+
+> La synchro « salle commune » ne demande **aucune** action admin : l'URL du Worker est intégrée
+> à l'app. La variable `TEMPO_SYNC_URL` n'est utile que pour pointer un autre serveur (voir
+> « Déplacer le Worker » ci-dessus).
 
 ## Dépannage rapide
 
