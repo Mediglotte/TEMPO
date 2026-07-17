@@ -5,8 +5,13 @@ import { useRoomSync, type SyncStatus } from '../sync/useRoomSync'
 
 const STORE_KEY = 'tempo:serverUrl'
 
-/** Serveur de salons du projet (Cloudflare Worker), injecté au build — docs/DEPLOYMENT.md. */
-const DEFAULT_SERVER = (import.meta.env.VITE_SYNC_URL ?? '').trim()
+/**
+ * Serveur de salons du projet (Cloudflare Worker). Valeur intégrée par défaut,
+ * surchargeable au build via VITE_SYNC_URL (ex. si le Worker déménage) —
+ * voir docs/DEPLOYMENT.md.
+ */
+const BUILTIN_SERVER = 'https://tempo-rooms.felix-amiot.workers.dev'
+const DEFAULT_SERVER = (import.meta.env.VITE_SYNC_URL ?? BUILTIN_SERVER).trim()
 
 function slug(s: string): string {
   return s
