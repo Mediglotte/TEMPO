@@ -1,9 +1,9 @@
 {
-  "name": "project-balaz",
+  "name": "tempo",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Prototype « partition d'urgence » — parcours du traumatisé sévère sur timeline commune (régulation / pré-hospitalier / intra-hospitalier)",
+  "description": "TEMPO — partition d'urgence : parcours du traumatisé sévère sur timeline commune (régulation / pré-hospitalier / intra-hospitalier)",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
