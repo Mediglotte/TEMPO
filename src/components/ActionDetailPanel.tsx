@@ -47,8 +47,8 @@ export function ActionDetailPanel() {
 
   return (
     <>
-      <div className="fixed inset-0 z-30 bg-slate-900/30" onClick={closeAction} />
-      <aside className="fixed right-0 top-0 z-40 flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto bg-white p-5 shadow-2xl">
+      <div className="enter-overlay fixed inset-0 z-30 bg-slate-900/30" onClick={closeAction} />
+      <aside className="enter-side-panel fixed right-0 top-0 z-40 flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-2">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">

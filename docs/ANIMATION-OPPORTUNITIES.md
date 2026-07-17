@@ -1,6 +1,7 @@
 # Opportunités d'animation — audit /find-animation-opportunities
 
-> Passe en lecture seule (2026-07-18) : aucune implémentation, uniquement des recettes précises.
+> Passe du 2026-07-18. Les 5 recettes ci-dessous sont **implémentées** (même branche) :
+> classes `enter-*`, `gate-*` et `hold-fill*` dans `src/styles/index.css`.
 > Posture : **retenue**. TEMPO est un outil clinique dense — l'essentiel de l'interface ne doit
 > **pas** bouger. Vocabulaire existant à étendre (pas de lib motion, transitions CSS pures) :
 > `cubic-bezier(0.2, 0, 0, 1)` (cross-fade ShareBar), `duration-150/200/300`, `ease-out`,

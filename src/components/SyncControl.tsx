@@ -112,7 +112,7 @@ export function SyncControl() {
       )}
 
       {(showSettings || !serverUrl) && (
-        <div className="flex flex-col gap-1">
+        <div className="enter-reveal flex flex-col gap-1">
           <label className="text-[11px] font-medium text-slate-500">
             {DEFAULT_SERVER
               ? 'Serveur de synchro (avancé — laisser vide pour le serveur du projet)'
