@@ -5,6 +5,9 @@ import { useRoomSync, type SyncStatus } from '../sync/useRoomSync'
 
 const STORE_KEY = 'tempo:serverUrl'
 
+/** Serveur de salons du projet (Cloudflare Worker), injecté au build — docs/DEPLOYMENT.md. */
+const DEFAULT_SERVER = (import.meta.env.VITE_SYNC_URL ?? '').trim()
+
 function slug(s: string): string {
   return s
     .normalize('NFD')
@@ -30,21 +33,21 @@ const LABEL: Record<SyncStatus, string> = {
 export function SyncControl() {
   const codename = useCaseStore((s) => s.caseState.header.patientCodename)
   const sessionId = useCaseStore((s) => s.caseState.header.sessionId)
-  const [serverUrl, setServerUrl] = useState('')
+  const [serverOverride, setServerOverride] = useState('')
   const [enabled, setEnabled] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORE_KEY)
-      if (saved) setServerUrl(saved)
+      if (saved) setServerOverride(saved)
     } catch {
       /* ignore */
     }
   }, [])
 
   const persistUrl = (v: string) => {
-    setServerUrl(v)
+    setServerOverride(v)
     try {
       localStorage.setItem(STORE_KEY, v)
     } catch {
@@ -52,8 +55,10 @@ export function SyncControl() {
     }
   }
 
+  // Le serveur du projet est utilisé sauf surcharge explicite (réglage avancé).
+  const serverUrl = serverOverride.trim() || DEFAULT_SERVER
   const roomCode = codename ? `${slug(codename)}-${sessionId ?? 'x'}` : ''
-  const canSync = Boolean(serverUrl.trim() && roomCode)
+  const canSync = Boolean(serverUrl && roomCode)
   const { status, error } = useRoomSync(enabled && canSync, serverUrl, roomCode)
 
   return (
@@ -95,29 +100,31 @@ export function SyncControl() {
         </p>
       )}
 
-      {(showSettings || !serverUrl.trim()) && (
+      {(showSettings || !serverUrl) && (
         <div className="flex flex-col gap-1">
           <label className="text-[11px] font-medium text-slate-500">
-            Adresse de votre site WordPress (serveur de synchro)
+            {DEFAULT_SERVER
+              ? 'Serveur de synchro (avancé — laisser vide pour le serveur du projet)'
+              : 'Adresse du serveur de synchro'}
           </label>
           <input
             type="url"
-            value={serverUrl}
-            placeholder="https://mon-site.fr"
+            value={serverOverride}
+            placeholder={DEFAULT_SERVER || 'https://tempo-rooms.exemple.workers.dev'}
             onChange={(e) => persistUrl(e.target.value)}
             className="w-full rounded-md border border-slate-200 px-2 py-1 text-sm focus:border-indigo-300 focus:outline-none"
           />
           <p className="flex items-start gap-1 text-[11px] text-slate-400">
             <AlertTriangle size={12} className="mt-px shrink-0" />
-            Nécessite le plugin « TEMPO Sync » installé sur ce site. Les données du cas transitent
-            alors par votre serveur (salles éphémères, aucune identité réelle).
+            Les données du cas transitent par ce serveur — salles éphémères (12 h), données
+            fictives uniquement, aucune identité réelle.
           </p>
         </div>
       )}
 
       {enabled && status === 'error' && (
         <p className="text-[11px] text-rose-600">
-          Connexion impossible ({error}). Vérifiez l'adresse et que le plugin est actif.
+          Connexion impossible ({error}). Vérifiez l'adresse du serveur de synchro.
         </p>
       )}
     </div>

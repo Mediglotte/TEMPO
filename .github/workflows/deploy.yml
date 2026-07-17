@@ -32,6 +32,11 @@ jobs:
         run: npm ci
       - name: Construction (Vite)
         run: npm run build
+        env:
+          # URL du serveur de salons (variable de repo, réglée par un admin —
+          # docs/DEPLOYMENT.md). Vide tant qu'elle n'existe pas : l'app propose
+          # alors la saisie manuelle de l'adresse du serveur.
+          VITE_SYNC_URL: ${{ vars.TEMPO_SYNC_URL }}
       - name: Préparation de l'artefact Pages
         uses: actions/upload-pages-artifact@v3
         with:
