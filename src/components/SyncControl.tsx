@@ -11,7 +11,11 @@ const STORE_KEY = 'tempo:serverUrl'
  * voir docs/DEPLOYMENT.md.
  */
 const BUILTIN_SERVER = 'https://tempo-rooms.felix-amiot.workers.dev'
-const DEFAULT_SERVER = (import.meta.env.VITE_SYNC_URL ?? BUILTIN_SERVER).trim()
+// `??` ne suffit pas : le déploiement Pages injecte VITE_SYNC_URL='' (chaîne
+// vide) quand la variable de repo n'existe pas — d'où le `||` sur une valeur
+// vraie pour retomber sur le serveur intégré.
+const SYNC_OVERRIDE = (import.meta.env.VITE_SYNC_URL ?? '').trim()
+const DEFAULT_SERVER = SYNC_OVERRIDE || BUILTIN_SERVER
 
 function slug(s: string): string {
   return s
