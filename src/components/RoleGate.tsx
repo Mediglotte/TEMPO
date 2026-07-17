@@ -17,21 +17,22 @@ export function RoleGate() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
-      <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl">
+      <div className="gate-card w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl">
         <h2 className="text-balance text-xl font-extrabold text-slate-900">Qui êtes-vous sur ce cas&nbsp;?</h2>
         <p className="mt-1 max-w-prose text-pretty text-sm text-slate-500">
           Vous pourrez <strong>renseigner votre ligne</strong> et <strong>lire</strong> les deux autres
           (modifiable à tout moment). Cela évite d’agir par erreur sur la ligne d’un autre maillon.
         </p>
         <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {CHOICES.map((c) => {
+          {CHOICES.map((c, i) => {
             const Icon = c.icon
             return (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => chooseRole(c.id)}
-                className={`flex items-center gap-3 rounded-xl border-2 bg-white px-4 py-4 text-start transition-[background-color,transform] duration-150 ease-out active:scale-[0.96] ${c.cls}`}
+                style={{ animationDelay: `${40 + i * 20}ms` }}
+                className={`gate-item flex items-center gap-3 rounded-xl border-2 bg-white px-4 py-4 text-start transition-[background-color,transform] duration-150 ease-out active:scale-[0.96] ${c.cls}`}
               >
                 <Icon size={26} className="shrink-0" />
                 <span className="flex flex-col">

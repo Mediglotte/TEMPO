@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { AppWindow, Check, FileDown, Link2, MessageCircle, RotateCcw } from 'lucide-react'
 import { useCaseStore } from '../store/caseStore'
 import { buildShareUrl, writeCaseToHash } from '../share/urlState'
@@ -40,6 +40,21 @@ export function ShareBar() {
     clearCase()
     reset()
     history.replaceState(null, '', window.location.pathname)
+  }
+
+  // Hold-to-confirm : « Réinitialiser » efface tout le cas, un simple clic ne suffit pas.
+  const [holding, setHolding] = useState(false)
+  const holdTimer = useRef<number | undefined>(undefined)
+  const startHold = () => {
+    setHolding(true)
+    holdTimer.current = window.setTimeout(() => {
+      setHolding(false)
+      onReset()
+    }, 2000)
+  }
+  const cancelHold = () => {
+    setHolding(false)
+    window.clearTimeout(holdTimer.current)
   }
 
   return (
@@ -92,10 +107,22 @@ export function ShareBar() {
       </button>
       <button
         type="button"
-        onClick={onReset}
-        className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+        onPointerDown={startHold}
+        onPointerUp={cancelHold}
+        onPointerLeave={cancelHold}
+        onPointerCancel={cancelHold}
+        onContextMenu={(e) => e.preventDefault()}
+        onClick={(e) => {
+          // Activation clavier / techno d'assistance (pas de « maintien » possible).
+          if (e.detail === 0 && window.confirm('Effacer le cas en cours et repartir de zéro ?')) onReset()
+        }}
+        title="Maintenir 2 s pour effacer le cas en cours"
+        className="relative flex min-w-[8.5rem] select-none items-center justify-center gap-1.5 overflow-hidden rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
       >
-        <RotateCcw size={15} /> Réinitialiser
+        <span aria-hidden className={`pointer-events-none absolute inset-0 bg-rose-200 ${holding ? 'hold-fill-active' : 'hold-fill'}`} />
+        <span className="relative flex items-center gap-1.5">
+          <RotateCcw size={15} /> {holding ? 'Maintenir…' : 'Réinitialiser'}
+        </span>
       </button>
     </div>
   )
