@@ -37,15 +37,15 @@ export function VoiceControl() {
           </div>
 
           {!v.supported ? (
-            <p className="rounded-lg bg-slate-50 p-2 text-xs text-slate-500">
+            <p className="rounded-lg bg-slate-50 p-2 text-pretty text-xs text-slate-500">
               La reconnaissance vocale n’est pas disponible dans ce navigateur. Essayez Chrome ou Edge.
             </p>
           ) : (
             <>
               {v.fileProtocol && (
-                <p className="flex items-start gap-1.5 rounded-lg bg-amber-50 p-2 text-[11px] text-amber-900">
+                <p className="flex items-start gap-1.5 rounded-lg bg-amber-50 p-2 text-pretty text-[11px] text-amber-900">
                   <AlertTriangle size={13} className="mt-px shrink-0" />
-                  Ouvert en fichier local : le micro est souvent bloqué. Testez via <code>npm run dev</code> ou la version en ligne.
+                  Ouvert en fichier local&nbsp;: le micro est souvent bloqué. Testez via <code>npm run dev</code> ou la version en ligne.
                 </p>
               )}
 
@@ -73,20 +73,20 @@ export function VoiceControl() {
 
               {v.lastTranscript && (
                 <p className="rounded-lg bg-slate-50 p-2 text-[11px] italic text-slate-500">
-                  « {v.lastTranscript} »
+                  «&nbsp;{v.lastTranscript}&nbsp;»
                 </p>
               )}
 
               {v.entries.length > 0 && (
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
                     Saisi cette session
                   </span>
                   <ul className="flex flex-col gap-0.5">
                     {v.entries.map((e) => (
                       <li key={e.actionId} className="flex justify-between gap-2 text-xs">
                         <span className="text-slate-600">{e.label}</span>
-                        <span className="font-semibold text-slate-900">{e.valueText}</span>
+                        <span className="font-semibold tabular-nums text-slate-900">{e.valueText}</span>
                       </li>
                     ))}
                   </ul>
@@ -105,21 +105,21 @@ export function VoiceControl() {
                   <Volume2 size={12} /> Commandes vocales
                 </span>
                 <dl className="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1">
-                  <dt className="font-semibold text-rose-700">« dictée »</dt>
+                  <dt className="font-semibold text-rose-700">«&nbsp;dictée&nbsp;»</dt>
                   <dd>démarre la saisie vocale</dd>
-                  <dt className="font-semibold text-rose-700">« synthèse »</dt>
+                  <dt className="font-semibold text-rose-700">«&nbsp;synthèse&nbsp;»</dt>
                   <dd>relit à voix haute ce qui a été saisi</dd>
-                  <dt className="font-semibold text-rose-700">« validé »</dt>
+                  <dt className="font-semibold text-rose-700">«&nbsp;validé&nbsp;»</dt>
                   <dd>confirme la saisie relue</dd>
-                  <dt className="font-semibold text-rose-700">« correction »</dt>
-                  <dd>modifie une valeur (« négatif » pour décocher)</dd>
-                  <dt className="font-semibold text-rose-700">« conseils »</dt>
+                  <dt className="font-semibold text-rose-700">«&nbsp;correction&nbsp;»</dt>
+                  <dd>modifie une valeur («&nbsp;négatif&nbsp;» pour décocher)</dd>
+                  <dt className="font-semibold text-rose-700">«&nbsp;conseils&nbsp;»</dt>
                   <dd>énonce les actions à mener et les constantes manquantes</dd>
-                  <dt className="font-semibold text-rose-700">« terminé »</dt>
+                  <dt className="font-semibold text-rose-700">«&nbsp;terminé&nbsp;»</dt>
                   <dd>arrête la saisie vocale</dd>
                 </dl>
-                <p className="mt-2 border-t border-slate-200 pt-1.5 text-slate-500">
-                  Exemple : « <em>tension 86, fréquence cardiaque 110, FAST positif, instable, grade A</em> »
+                <p className="mt-2 border-t border-slate-200 pt-1.5 text-pretty text-slate-500">
+                  Exemple&nbsp;: «&nbsp;<em>tension 86, fréquence cardiaque 110, FAST positif, instable, grade A</em>&nbsp;»
                 </p>
               </div>
             </>

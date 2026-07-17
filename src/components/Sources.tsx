@@ -8,9 +8,9 @@ export function Sources() {
       <summary className="flex cursor-pointer items-center gap-2 font-semibold text-slate-700">
         <BookText size={15} className="text-slate-500" /> Sources &amp; références
       </summary>
-      <ul className="mt-2 flex flex-col gap-1.5 text-xs text-slate-600">
+      <ul className="mt-2 flex max-w-prose flex-col gap-1.5 text-xs text-slate-600">
         {SOURCES.map((s) => (
-          <li key={s.label}>
+          <li key={s.label} className="text-pretty">
             <span className="font-semibold text-slate-800">{s.label}</span> — {s.note}
           </li>
         ))}

@@ -32,9 +32,9 @@ export interface VoiceApi {
 }
 
 const MODE_LABEL: Record<VoiceMode, string> = {
-  idle: 'En écoute — dites « dictée »',
+  idle: 'En écoute — dites «\u00A0dictée\u00A0»',
   dictating: 'Dictée en cours',
-  awaitingValidation: 'Relecture — dites « validé »',
+  awaitingValidation: 'Relecture — dites «\u00A0validé\u00A0»',
   correcting: 'Correction — annoncez la valeur',
 }
 

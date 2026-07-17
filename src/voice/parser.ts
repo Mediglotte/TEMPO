@@ -80,7 +80,7 @@ export function parseFills(raw: string): VoiceFill[] {
         actionId: f.actionId,
         label: f.label,
         value: n,
-        valueText: `${n}${f.unit ? ' ' + f.unit : ''}`,
+        valueText: `${n}${f.unit ? '\u00A0' + f.unit : ''}`,
       })
     }
   }

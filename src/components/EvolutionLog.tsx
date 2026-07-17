@@ -38,8 +38,8 @@ export function EvolutionLog({ actionId, editable }: { actionId: string; editabl
               if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') add()
             }}
             rows={2}
-            placeholder="Nouvelle note d'évolution (constantes, geste, événement…)"
-            className="w-full resize-y rounded-lg border border-slate-300 px-2.5 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            placeholder="Nouvelle note d’évolution (constantes, geste, événement…)"
+            className="w-full resize-y rounded-lg border border-slate-300 px-2.5 py-2 text-base focus:border-slate-500 focus:outline-none sm:text-sm"
           />
           <button
             type="button"
@@ -53,7 +53,7 @@ export function EvolutionLog({ actionId, editable }: { actionId: string; editabl
       )}
 
       {ordered.length === 0 ? (
-        <p className="text-sm text-slate-400">Aucune note pour le moment.</p>
+        <p className="text-sm text-slate-500">Aucune note pour le moment.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {ordered.map((e) => (

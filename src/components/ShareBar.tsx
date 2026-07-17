@@ -17,7 +17,7 @@ export function ShareBar() {
     try {
       await navigator.clipboard.writeText(url)
     } catch {
-      window.prompt('Copiez le lien de partage :', url)
+      window.prompt('Copiez le lien de partage\u00A0:', url)
     }
     setCopied(true)
     window.setTimeout(() => setCopied(false), 1800)
@@ -26,7 +26,7 @@ export function ShareBar() {
   const onWhatsApp = () => {
     const url = buildShareUrl(caseState)
     writeCaseToHash(caseState)
-    const text = encodeURIComponent(`TEMPO — partition d’urgence — suivez le cas : ${url}`)
+    const text = encodeURIComponent(`TEMPO — partition d’urgence — suivez le cas\u00A0: ${url}`)
     window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener')
   }
 
@@ -47,17 +47,17 @@ export function ShareBar() {
       <button
         type="button"
         onClick={onCopy}
-        className="flex items-center gap-1.5 rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-slate-700"
+        className="flex w-36 items-center justify-center gap-1.5 rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-slate-700"
       >
         {copied ? <Check size={15} /> : <Link2 size={15} />}
-        {copied ? 'Lien copié !' : 'Copier le lien'}
+        {copied ? 'Lien copié\u00A0!' : 'Copier le lien'}
       </button>
       <button
         type="button"
         onClick={onWhatsApp}
         title="Partager le lien par WhatsApp"
         aria-label="Partager le lien par WhatsApp"
-        className="flex items-center justify-center rounded-lg bg-[#25D366] p-1.5 text-white hover:brightness-95"
+        className="flex items-center justify-center rounded-lg bg-[oklch(0.761_0.201_149.74)] p-1.5 text-slate-900 hover:brightness-95"
       >
         <MessageCircle size={18} />
       </button>

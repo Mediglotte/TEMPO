@@ -147,7 +147,7 @@ function CollapsedLane({
           </ul>
         ) : (
           <>
-            <span className="text-[11px] italic text-slate-400">vue réduite — {acts.length} actions</span>
+            <span className="text-[11px] italic text-slate-500">vue réduite — {acts.length}&nbsp;actions</span>
             <ul className="flex flex-col gap-0.5">
               {track.sections.map((s) => (
                 <li
@@ -216,7 +216,7 @@ function MiniIcon({
 
   const valueText =
     value !== null && value !== undefined && value !== '' && typeof value !== 'boolean'
-      ? ` : ${value}`
+      ? `\u00A0: ${value}`
       : ''
   const timeText = completedAt != null && (checkboxDone || filled) ? ` — ${formatClock(completedAt)}` : ''
 

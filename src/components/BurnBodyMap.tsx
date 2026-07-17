@@ -44,16 +44,16 @@ export function BurnBodyMap({ actionId, editable }: Props) {
                 : 'bg-slate-100 text-slate-700'
           }`}
         >
-          {total} %
+          {total}&nbsp;%
         </span>
       </div>
 
       <svg viewBox="0 0 262 250" className="w-full select-none" role="img" aria-label="Schéma corporel de Wallace">
         {WALLACE_ZONES.map((zone) => {
           const on = isOn(zone)
-          const fill = on ? '#ef4444' : '#f1f5f9'
-          const stroke = on ? '#b91c1c' : '#94a3b8'
-          const textFill = on ? '#ffffff' : '#64748b'
+          const fill = on ? 'oklch(0.577 0.215 27.325)' : 'oklch(0.968 0.007 247.896)'
+          const stroke = on ? 'oklch(0.505 0.19 27.518)' : 'oklch(0.711 0.035 256.788)'
+          const textFill = on ? 'oklch(1 0 0)' : 'oklch(0.446 0.037 257.281)'
           const cx =
             zone.shape.kind === 'circle' ? zone.shape.cx : zone.shape.x + zone.shape.w / 2
           const cy =
@@ -64,7 +64,7 @@ export function BurnBodyMap({ actionId, editable }: Props) {
               onClick={() => toggle(zone)}
               style={{ cursor: editable ? 'pointer' : 'default' }}
             >
-              <title>{`${zone.label} — ${zone.pct} %`}</title>
+              <title>{`${zone.label} — ${zone.pct}\u00A0%`}</title>
               {zone.shape.kind === 'circle' ? (
                 <circle
                   cx={zone.shape.cx}
@@ -91,7 +91,7 @@ export function BurnBodyMap({ actionId, editable }: Props) {
                 y={cy}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize={8}
+                fontSize={10}
                 fontWeight={600}
                 fill={textFill}
                 pointerEvents="none"
@@ -101,10 +101,10 @@ export function BurnBodyMap({ actionId, editable }: Props) {
             </g>
           )
         })}
-        <text x={60} y={244} textAnchor="middle" fontSize={11} fontWeight={700} fill="#475569">
+        <text x={60} y={244} textAnchor="middle" fontSize={11} fontWeight={700} fill="oklch(0.446 0.037 257.281)">
           Face
         </text>
-        <text x={200} y={244} textAnchor="middle" fontSize={11} fontWeight={700} fill="#475569">
+        <text x={200} y={244} textAnchor="middle" fontSize={11} fontWeight={700} fill="oklch(0.446 0.037 257.281)">
           Dos
         </text>
       </svg>

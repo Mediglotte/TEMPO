@@ -33,7 +33,7 @@ export function ScoreBoard() {
             style={{ left: colW + xOfMinute(m.atMin) }}
           >
             <div className="h-full w-px bg-amber-400/70" />
-            <span className="absolute top-0 z-20 -translate-x-1/2 whitespace-nowrap rounded-b bg-amber-400 px-1 py-px text-[9px] font-bold text-white shadow-sm">
+            <span className="absolute top-0 z-20 -translate-x-1/2 whitespace-nowrap rounded-b bg-amber-400 px-1 py-px text-[10px] font-bold text-white shadow-sm">
               {m.label}
             </span>
           </div>

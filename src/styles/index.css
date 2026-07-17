@@ -16,8 +16,17 @@ body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
-  background: #f1f5f9;
-  color: #0f172a;
+  background: oklch(0.968 0.007 247.896);
+  color: oklch(0.208 0.04 265.755);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis: none;
+}
+
+/* Placeholders lisibles par défaut (le gray-400 du preflight tombe à ~2,5:1 sur blanc) ;
+   les utilitaires Tailwind placeholder:* restent prioritaires. */
+::placeholder {
+  color: oklch(0.554 0.041 257.417);
 }
 
 /* Barre de défilement discrète pour la zone timeline */
@@ -28,6 +37,6 @@ body {
   height: 10px;
 }
 .timeline-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: oklch(0.869 0.02 252.894);
   border-radius: 9999px;
 }

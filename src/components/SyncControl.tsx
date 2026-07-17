@@ -76,7 +76,7 @@ export function SyncControl() {
         <Users size={15} className="text-slate-500" />
         <span className="text-sm font-semibold text-slate-800">Synchro équipe</span>
         <span className={`ml-1 h-2.5 w-2.5 rounded-full ${DOT[enabled ? status : 'off']}`} />
-        <span className="text-xs text-slate-500">{LABEL[enabled ? status : 'off']}</span>
+        <span className="whitespace-nowrap text-xs text-slate-500">{LABEL[enabled ? status : 'off']}</span>
         <div className="ml-auto flex items-center gap-1">
           <button
             type="button"
@@ -102,10 +102,10 @@ export function SyncControl() {
       </div>
 
       {enabled && roomCode && (
-        <p className="text-xs text-slate-500">
-          Salle : <span className="font-semibold text-indigo-700">{codename}</span>{' '}
-          <span className="text-slate-400">({roomCode})</span> — partagez le lien du patient aux
-          autres équipes pour qu'elles rejoignent la même salle.
+        <p className="text-pretty text-xs text-slate-500">
+          Salle&nbsp;: <span className="font-semibold text-indigo-700">{codename}</span>{' '}
+          <span className="text-slate-500">({roomCode})</span> — partagez le lien du patient aux
+          autres équipes pour qu’elles rejoignent la même salle.
         </p>
       )}
 
@@ -121,19 +121,19 @@ export function SyncControl() {
             value={serverOverride}
             placeholder={DEFAULT_SERVER || 'https://tempo-rooms.exemple.workers.dev'}
             onChange={(e) => persistUrl(e.target.value)}
-            className="w-full rounded-md border border-slate-200 px-2 py-1 text-sm focus:border-indigo-300 focus:outline-none"
+            className="w-full rounded-md border border-slate-200 px-2 py-1 text-base focus:border-indigo-300 focus:outline-none sm:text-sm"
           />
-          <p className="flex items-start gap-1 text-[11px] text-slate-400">
+          <p className="flex items-start gap-1 text-pretty text-[11px] text-slate-500">
             <AlertTriangle size={12} className="mt-px shrink-0" />
-            Les données du cas transitent par ce serveur — salles éphémères (12 h), données
+            Les données du cas transitent par ce serveur — salles éphémères (12&nbsp;h), données
             fictives uniquement, aucune identité réelle.
           </p>
         </div>
       )}
 
       {enabled && status === 'error' && (
-        <p className="text-[11px] text-rose-600">
-          Connexion impossible ({error}). Vérifiez l'adresse du serveur de synchro.
+        <p className="text-pretty text-[11px] text-rose-600">
+          Connexion impossible ({error}). Vérifiez l’adresse du serveur de synchro.
         </p>
       )}
     </div>

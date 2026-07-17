@@ -44,7 +44,7 @@ export function Stopwatch() {
           Chrono
         </span>
         {running ? (
-          <span className="flex items-center gap-1 text-[11px] text-emerald-400">
+          <span className="flex items-center gap-1 whitespace-nowrap text-[11px] text-emerald-400">
             <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" /> en cours
           </span>
         ) : (
@@ -59,15 +59,15 @@ export function Stopwatch() {
       {passedBadges.map((m) => (
         <span
           key={m.id}
-          title={`Plus de ${m.atMin} minutes écoulées depuis le début de la prise en charge`}
-          className="flex animate-blink items-center gap-1.5 rounded-lg bg-rose-600 px-2.5 py-1.5 text-sm font-bold text-white ring-2 ring-rose-300"
+          title={`Plus de ${m.atMin}\u00A0minutes écoulées depuis le début de la prise en charge`}
+          className="flex animate-blink items-center gap-1.5 whitespace-nowrap rounded-lg bg-rose-600 px-2.5 py-1.5 text-sm font-bold text-white ring-2 ring-rose-300"
         >
           <Hourglass size={15} /> {m.badge}
         </span>
       ))}
 
       <div className="ml-auto flex items-center gap-3">
-        <span className={`text-xs ${running ? 'text-slate-300' : 'text-rose-700'}`}>
+        <span className={`text-xs tabular-nums ${running ? 'text-slate-300' : 'text-rose-700'}`}>
           départ {formatClock(caseStartedAt)}
           {!running && stoppedAt != null && <> · arrêt {formatClock(stoppedAt)}</>}
         </span>
@@ -91,8 +91,8 @@ export function Stopwatch() {
           )
         ) : (
           running && (
-            <span className="text-[11px] italic text-slate-400">
-              arrêt réservé à l'équipe hôpital
+            <span className="text-[11px] italic text-slate-500">
+              arrêt réservé à l’équipe hôpital
             </span>
           )
         )}

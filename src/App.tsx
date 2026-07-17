@@ -41,15 +41,15 @@ export default function App() {
       <header className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
           <Logo size={34} className="shrink-0" />
-          <h1 className="text-xl font-extrabold text-slate-900 sm:text-2xl">
+          <h1 className="text-balance text-xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-2xl">
             TEMPO <span className="font-semibold text-slate-500">— partition d’urgence</span>
           </h1>
         </div>
-        <p className="text-sm text-slate-500">
+        <p className="max-w-prose text-pretty text-sm text-slate-500">
           Régulation · Pré-hospitalier · Intra-hospitalier sur une timeline commune. Une action
           renseignée par une équipe en débloque / alerte d’autres.
         </p>
-        <p className="text-xs text-slate-500">
+        <p className="max-w-prose text-pretty text-xs text-slate-500">
           Réalisé par le <strong className="font-semibold text-slate-700">Dr Félix AMIOT</strong> (SMUR / Urgences / SAMU 50 —
           CH Saint-Lô) et le <strong className="font-semibold text-slate-700">Dr Pierre BALAZ</strong> (BMPM).
           Projet open source — licence MIT.
@@ -78,7 +78,7 @@ export default function App() {
           </button>
           {syncSupported && (
             <span
-              className="flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-1 text-[11px] font-medium text-emerald-700"
+              className="flex items-center gap-1 whitespace-nowrap rounded-full bg-emerald-100 px-2 py-1 text-[11px] font-medium text-emerald-700"
               title="Les fenêtres ouvertes sur cette machine se synchronisent en temps réel."
             >
               <RadioTower size={12} /> Synchro multi-fenêtres
@@ -103,8 +103,8 @@ export default function App() {
 
       <Legend />
 
-      <footer className="pb-6 text-center text-[11px] text-slate-400">
-        TEMPO — partition d’urgence · sources : Vittel, RESUVAL, score ABC, BATT, CRASH-2,
+      <footer className="mx-auto max-w-prose text-pretty pb-6 text-center text-[11px] text-slate-500">
+        TEMPO — partition d’urgence · sources&nbsp;: Vittel, RESUVAL, score ABC, BATT, CRASH-2,
         Wallace.
         <br />
         © 2026 Dr Félix AMIOT (SMUR / Urgences / SAMU 50 — CH Saint-Lô) &amp; Dr Pierre BALAZ (BMPM) — open source (licence MIT).
@@ -127,9 +127,9 @@ function Legend() {
   ]
   return (
     <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500">
-      <span className="font-semibold uppercase tracking-wide text-slate-400">Légende</span>
+      <span className="font-semibold uppercase tracking-wide text-slate-500">Légende</span>
       {items.map((it) => (
-        <span key={it.label} className="flex items-center gap-1.5">
+        <span key={it.label} className="flex items-center gap-1.5 whitespace-nowrap">
           <span className={`inline-block h-3.5 w-5 rounded border ${it.cls}`} />
           {it.label}
         </span>

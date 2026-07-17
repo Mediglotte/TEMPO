@@ -39,10 +39,10 @@ export function ActionDetailPanel() {
       <aside className="fixed right-0 top-0 z-40 flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
               {track?.shortLabel} · {section?.label}
             </p>
-            <h2 className="text-lg font-bold text-slate-900">{action.label}</h2>
+            <h2 className="text-balance text-lg font-bold leading-snug text-slate-900">{action.label}</h2>
           </div>
           <button
             type="button"
@@ -55,7 +55,7 @@ export function ActionDetailPanel() {
         </div>
 
         {action.detail?.reminder && (
-          <div className="whitespace-pre-line rounded-lg bg-slate-50 p-3 text-sm leading-relaxed text-slate-700">
+          <div className="whitespace-pre-line text-pretty rounded-lg bg-slate-50 p-3 text-sm leading-relaxed text-slate-700">
             {action.detail.reminder}
           </div>
         )}
@@ -108,8 +108,8 @@ export function ActionDetailPanel() {
           </div>
         )}
 
-        <p className="mt-auto text-[11px] text-slate-400">
-          Astuce : l’action se renseigne aussi directement sur sa carte dans la timeline.
+        <p className="mt-auto text-pretty text-[11px] text-slate-500">
+          Astuce&nbsp;: l’action se renseigne aussi directement sur sa carte dans la timeline.
         </p>
       </aside>
     </>
@@ -131,7 +131,7 @@ function SubFieldInput({
       <button
         type="button"
         onClick={() => onChange(!checked)}
-        className="flex items-start gap-2 rounded-md border border-slate-200 px-2.5 py-2 text-left text-sm hover:bg-slate-50"
+        className="flex items-start gap-2 rounded-md border border-slate-200 px-2.5 py-2 text-start text-sm hover:bg-slate-50"
       >
         <span
           className={`mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded border ${
@@ -152,14 +152,14 @@ function SubFieldInput({
         <button
           type="button"
           onClick={() => onChange(recorded ? null : formatClock(Date.now()))}
-          className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-sm font-medium ${
+          className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-sm font-medium tabular-nums ${
             recorded
               ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
               : 'border-slate-300 text-slate-700 hover:bg-slate-50'
           }`}
         >
           <Clock size={14} />
-          {recorded ? `${subField.label} : ${recorded}` : `${subField.label} — noter l’heure`}
+          {recorded ? `${subField.label} : ${recorded}` : `${subField.label} — noter l’heure`}
         </button>
         {recorded && (
           <button
@@ -196,7 +196,7 @@ function SubFieldInput({
         <select
           value={typeof value === 'string' ? value : ''}
           onChange={(e) => onChange(e.target.value || null)}
-          className="rounded border border-slate-300 px-2 py-1 focus:border-slate-500 focus:outline-none"
+          className="rounded border border-slate-300 px-2 py-1 text-base focus:border-slate-500 focus:outline-none sm:text-sm"
         >
           <option value="">—</option>
           {subField.options?.map((o) => (
@@ -219,7 +219,7 @@ function SubFieldInput({
                   : e.target.value,
             )
           }
-          className="rounded border border-slate-300 px-2 py-1 focus:border-slate-500 focus:outline-none"
+          className="rounded border border-slate-300 px-2 py-1 text-base focus:border-slate-500 focus:outline-none sm:text-sm"
         />
       )}
     </label>

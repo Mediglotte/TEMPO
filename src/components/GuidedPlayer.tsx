@@ -112,8 +112,8 @@ export function GuidedPlayer() {
         onClick={play}
         title={
           ttsSupported
-            ? 'Visite commentée à voix haute : principe, déroulé, interfaces, synthèse'
-            : 'Visite guidée pas à pas : principe, déroulé, interfaces, synthèse'
+            ? 'Visite commentée à voix haute\u00A0: principe, déroulé, interfaces, synthèse'
+            : 'Visite guidée pas à pas\u00A0: principe, déroulé, interfaces, synthèse'
         }
         className="flex shrink-0 items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:from-indigo-700 hover:to-violet-700"
       >
@@ -194,7 +194,7 @@ export function GuidedPlayer() {
           ))}
         </div>
 
-        <span className="text-xs font-semibold tabular-nums text-indigo-700">
+        <span className="whitespace-nowrap text-xs font-semibold tabular-nums text-indigo-700">
           {finished ? `Terminé · ${stepCount}/${stepCount}` : `Étape ${shown}/${stepCount}`}
         </span>
 
@@ -212,7 +212,7 @@ export function GuidedPlayer() {
         <div className="h-full rounded-full bg-indigo-500 transition-all duration-300" style={{ width: `${pct}%` }} />
       </div>
 
-      <p className="mt-2 text-sm leading-snug text-indigo-900">
+      <p className="mt-2 max-w-prose text-pretty text-sm leading-normal text-indigo-900">
         {finished ? 'Démonstration terminée — de l’appel jusqu’au bloc, tous les acteurs sur une même partition.' : current.narration}
       </p>
     </div>

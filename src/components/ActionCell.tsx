@@ -40,7 +40,7 @@ export function ActionCell({ action, x, top, effect, flow = false }: Props) {
   const CategoryIcon = iconForCategory(action.category)
 
   const classes = [
-    'rounded-lg border px-2.5 py-1.5 text-left shadow-sm transition-all',
+    'rounded-lg border px-2.5 py-1.5 text-start shadow-sm transition-all',
     'flex flex-col justify-between overflow-hidden',
     flow ? 'relative w-full' : 'absolute',
   ]
@@ -116,16 +116,16 @@ export function ActionCell({ action, x, top, effect, flow = false }: Props) {
           <button
             type="button"
             onClick={() => openAction(action.id)}
-            className="flex items-center gap-1 rounded border border-slate-300 px-1.5 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-slate-50"
+            className="flex items-center gap-1 rounded border border-slate-300 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-600 hover:bg-slate-50"
           >
             <NotebookPen size={12} />
-            {logCount > 0 ? `${logCount} note${logCount > 1 ? 's' : ''}` : 'Ajouter une note'}
+            {logCount > 0 ? `${logCount} note${logCount > 1 ? 's' : ''}` : 'Ajouter une note'}
           </button>
         ) : (
           <>
             {renderEditor(action, value, locked, !editable, setValue)}
             {entry?.completedAt != null && (checkboxDone || filled) && (
-              <span className="ml-auto text-[10px] tabular-nums text-slate-400">
+              <span className="ms-auto text-[10px] tabular-nums text-slate-500">
                 {formatClock(entry.completedAt)}
               </span>
             )}
@@ -162,7 +162,7 @@ function renderEditor(
           value={value === null || value === undefined ? '' : String(value)}
           placeholder={action.placeholder}
           onChange={(e) => setValue(action.id, e.target.value === '' ? null : Number(e.target.value))}
-          className={`h-6 w-16 rounded border border-slate-300 px-1 text-[11px] tabular-nums focus:border-slate-500 focus:outline-none ${disabledCls}`}
+          className={`h-8 w-16 rounded border border-slate-300 px-1 text-base tabular-nums focus:border-slate-500 focus:outline-none sm:h-6 sm:text-[11px] ${disabledCls}`}
         />
       )
     case 'select':
@@ -171,7 +171,7 @@ function renderEditor(
           disabled={disabled}
           value={typeof value === 'string' ? value : ''}
           onChange={(e) => setValue(action.id, e.target.value || null)}
-          className={`h-6 max-w-[150px] rounded border border-slate-300 bg-white px-1 text-[11px] focus:border-slate-500 focus:outline-none ${disabledCls}`}
+          className={`h-8 max-w-[150px] rounded border border-slate-300 bg-white px-1 text-base focus:border-slate-500 focus:outline-none sm:h-6 sm:text-[11px] ${disabledCls}`}
         >
           <option value="">—</option>
           {action.options?.map((o) => (
@@ -189,13 +189,13 @@ function renderEditor(
           value={typeof value === 'string' ? value : ''}
           placeholder={action.placeholder}
           onChange={(e) => setValue(action.id, e.target.value || null)}
-          className={`h-6 w-[150px] rounded border border-slate-300 px-1 text-[11px] focus:border-slate-500 focus:outline-none ${disabledCls}`}
+          className={`h-8 w-[150px] rounded border border-slate-300 px-1 text-base focus:border-slate-500 focus:outline-none sm:h-6 sm:text-[11px] ${disabledCls}`}
         />
       )
     case 'computed':
       return (
-        <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-white">
-          {action.unit ? `${value} ${action.unit}` : value}
+        <span className="whitespace-nowrap rounded bg-slate-800 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-white">
+          {action.unit ? `${value} ${action.unit}` : value}
         </span>
       )
     case 'checkbox':
