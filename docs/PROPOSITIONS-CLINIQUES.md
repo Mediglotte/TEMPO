@@ -64,6 +64,17 @@ ligne :
 | Hypoglycémie | Resucrage |
 | Anémie (Hcue bas) | Transfusion / accélérer l'accès au sang |
 
+## 6 bis. Incohérence interne : seuil GCS de l'invite à l'intubation
+
+**Constat (code-review 2026-07-18, purement factuel)** : la règle `r.gcs-intubation`
+(`rules.ts`) met l'ISR en évidence pour **GCS < 8** (strictement), alors que le critère
+BATT crédite « Glasgow ≤ 8 » (`lte 8`) et que le rappel de grade A écrit « GCS ≤ 8 »
+(`clinical.ts`). Concrètement : un GCS saisi à **8** marque +4 au BATT et relève du
+grade A selon le texte, mais **ne déclenche pas** l'invite à l'intubation.
+
+**Question au référent** : le seuil de l'invite ISR doit-il être « < 8 » ou « ≤ 8 » ?
+Aucune des deux valeurs n'a été modifiée par la revue — seule l'incohérence est signalée.
+
 ## 6. Jalons temporels supplémentaires
 
 **Aujourd'hui** : lignes à 30 et 60 min (« golden hour ») sur la timeline.

@@ -222,6 +222,8 @@ export interface ValueEntry {
   value: ActionValue
   /** Horodatage du passage à « fait / rempli » (epoch ms). */
   completedAt?: number
+  /** Horodatage de la DERNIÈRE modification (epoch ms) — sert au LWW de la synchro. */
+  updatedAt?: number
 }
 
 export interface CaseHeader {
@@ -236,6 +238,8 @@ export interface CaseHeader {
   caseStartedAt: number
   /** Horodatage d'arrêt du chrono (epoch ms) — posé par l'équipe intra-hosp. */
   chronoStoppedAt?: number
+  /** Cumul des périodes d'arrêt du chrono (ms) — la reprise ne re-compte pas l'arrêt. */
+  chronoPausedMs?: number
 }
 
 export interface CaseState {

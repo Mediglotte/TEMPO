@@ -2,6 +2,7 @@ import { ChevronDown, Eye, Pencil } from 'lucide-react'
 import type { ActionDef, DerivedUiState, SectionDef, TrackDef } from '../types/model'
 import { actionIndex, activeProtocol } from '../config'
 import { resolveValue } from '../engine/evaluate'
+import { displayValue } from '../engine/computed'
 import { actionsOfSection, actionsOfTrack } from '../lib/protocol'
 import { iconForCategory } from '../lib/icons'
 import { isFilledValue } from '../lib/case'
@@ -60,7 +61,7 @@ export function TrackLane({ track, derived, totalMinutes, dimmed }: Props) {
           {roleChosen && (
             <span
               title={editable ? 'Vous éditez cette ligne' : 'Lecture seule'}
-              className={`flex shrink-0 items-center rounded bg-white/20 p-1 ${compact ? '' : ''}`}
+              className="flex shrink-0 items-center rounded bg-white/20 p-1"
             >
               {editable ? <Pencil size={12} /> : <Eye size={12} />}
             </span>
@@ -207,7 +208,7 @@ function MiniIcon({
   const levelStyle = effect?.level ? LEVEL_STYLES[effect.level] : undefined
 
   const classes = [
-    'absolute grid place-items-center rounded-md border transition-[color,background-color,border-color,box-shadow] before:absolute before:-inset-[3px]',
+    'absolute grid place-items-center rounded-md border transition-[color,background-color,border-color,box-shadow,left,top] before:absolute before:-inset-[3px]',
   ]
   if (!action.detail) classes.push('cursor-default')
   if (locked) classes.push('border-dashed border-slate-300 bg-slate-100 text-slate-300')
@@ -219,7 +220,7 @@ function MiniIcon({
 
   const valueText =
     value !== null && value !== undefined && value !== '' && typeof value !== 'boolean'
-      ? `\u00A0: ${value}`
+      ? `\u00A0: ${displayValue(value)}`
       : ''
   const timeText = completedAt != null && (checkboxDone || filled) ? ` — ${formatClock(completedAt)}` : ''
 

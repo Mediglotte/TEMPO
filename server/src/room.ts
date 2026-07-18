@@ -9,8 +9,10 @@ const MAX_BODY_BYTES = 300_000
 
 // Anti-abus proportionné à une démo : seau de jetons par salon (en mémoire,
 // remis à neuf si l'objet hiberne — suffisant pour lisser un emballement).
-const BUCKET_CAPACITY = 20
-const REFILL_PER_SECOND = 5
+// Un poste en édition active fait ~1,33 req/s (GET + POST par tick de 1,5 s) :
+// dimensionné pour ~8 postes simultanés dans une même salle.
+const BUCKET_CAPACITY = 30
+const REFILL_PER_SECOND = 12
 
 interface RoomData {
   v: number
@@ -59,6 +61,19 @@ export class TempoRoom {
     }
     if (payload === null || typeof payload !== 'object' || !('case' in payload)) {
       return Response.json({ error: 'JSON invalide' }, { status: 400 })
+    }
+    // Garde structurelle : un `case` malformé stocké tel quel empoisonnerait la
+    // salle (chaque client planterait sa fusion à tous les ticks pendant 12 h).
+    const c = (payload as { case: unknown }).case
+    if (
+      c === null ||
+      typeof c !== 'object' ||
+      typeof (c as Record<string, unknown>).header !== 'object' ||
+      (c as Record<string, unknown>).header === null ||
+      typeof (c as Record<string, unknown>).values !== 'object' ||
+      (c as Record<string, unknown>).values === null
+    ) {
+      return Response.json({ error: 'case malformé' }, { status: 400 })
     }
 
     const prev = await this.state.storage.get<RoomData>('room')

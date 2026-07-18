@@ -1,10 +1,12 @@
 import type { Role } from '../store/uiStore'
 import { useUiStore } from '../store/uiStore'
 
+// Mêmes teintes que les en-têtes de piste (theme.ts, `-700` pour le contraste AA) :
+// le chip actif doit rester le miroir exact de « sa » piste.
 const ROLES: { id: Role; label: string; active: string }[] = [
-  { id: 'regul', label: 'Régulateur', active: 'bg-sky-600 text-white' },
-  { id: 'prehosp', label: 'SMUR / VSAV', active: 'bg-amber-600 text-white' },
-  { id: 'intra', label: 'Intra-hosp', active: 'bg-rose-600 text-white' },
+  { id: 'regul', label: 'Régulateur', active: 'bg-sky-700 text-white' },
+  { id: 'prehosp', label: 'SMUR / VSAV', active: 'bg-amber-700 text-white' },
+  { id: 'intra', label: 'Intra-hosp', active: 'bg-rose-700 text-white' },
   { id: 'observer', label: 'Observateur', active: 'bg-slate-800 text-white' },
 ]
 

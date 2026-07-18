@@ -46,6 +46,22 @@ describe('mergeCases', () => {
     expect(merged.header.sessionId).toBe('abc123') // rempli localement → conservé
   })
 
+  it('updatedAt prime sur completedAt : une ré-édition se propage', () => {
+    // Ré-édition locale : completedAt d'origine conservé, updatedAt rafraîchi —
+    // sans updatedAt, les deux côtés seraient à égalité et divergeraient pour toujours.
+    const local = makeCase({ values: { 'a.un': { value: 90, completedAt: 2000, updatedAt: 9000 } } })
+    const remote = makeCase({ values: { 'a.un': { value: 110, completedAt: 2000, updatedAt: 2000 } } })
+    expect(mergeCases(local, remote).values['a.un'].value).toBe(90)
+    expect(mergeCases(remote, local).values['a.un'].value).toBe(90)
+  })
+
+  it('une décoche (tombstone value:null) se propage comme une écriture', () => {
+    const local = makeCase({ values: { 'a.un': { value: true, completedAt: 2000, updatedAt: 2000 } } })
+    const remote = makeCase({ values: { 'a.un': { value: null, updatedAt: 5000 } } })
+    expect(mergeCases(local, remote).values['a.un'].value).toBeNull()
+    expect(mergeCases(remote, local).values['a.un'].value).toBeNull()
+  })
+
   it('garde le protocolId local', () => {
     const local = makeCase()
     const remote = makeCase({ protocolId: 'autre-protocole' })

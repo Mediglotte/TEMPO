@@ -1,7 +1,11 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+/** Durée du maintien « Réinitialiser » — source unique, injectée aussi dans la
+ *  transition CSS de la jauge (.hold-fill-active) via style.transitionDuration. */
+const HOLD_MS = 2000
 import { AppWindow, Check, FileDown, Link2, MessageCircle, RotateCcw } from 'lucide-react'
 import { useCaseStore } from '../store/caseStore'
-import { buildShareUrl, writeCaseToHash } from '../share/urlState'
+import { buildShareUrl } from '../share/urlState'
 import { clearCase } from '../share/persistence'
 import { activeProtocol } from '../config'
 import { exportCasePdf } from '../lib/pdf'
@@ -12,8 +16,10 @@ export function ShareBar() {
   const [copied, setCopied] = useState(false)
 
   const onCopy = async () => {
+    // Le lien est construit à la volée ; on n'écrit PAS le hash dans notre
+    // propre URL (il deviendrait périmé à la saisie suivante et écraserait
+    // les données au prochain rechargement).
     const url = buildShareUrl(caseState)
-    writeCaseToHash(caseState)
     try {
       await navigator.clipboard.writeText(url)
     } catch {
@@ -25,7 +31,6 @@ export function ShareBar() {
 
   const onWhatsApp = () => {
     const url = buildShareUrl(caseState)
-    writeCaseToHash(caseState)
     const text = encodeURIComponent(`TEMPO — partition d’urgence — suivez le cas\u00A0: ${url}`)
     window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener')
   }
@@ -42,20 +47,45 @@ export function ShareBar() {
     history.replaceState(null, '', window.location.pathname)
   }
 
-  // Hold-to-confirm : « Réinitialiser » efface tout le cas, un simple clic ne suffit pas.
+  // Hold-to-confirm : « Réinitialiser » efface tout le cas.
+  // - maintien pointeur 2 s (HOLD_MS, source unique, injectée aussi dans le CSS) ;
+  // - clic simple / clavier / lecteur d'écran → window.confirm (toujours accessible) ;
+  // - bouton principal uniquement, timer nettoyé à l'unmount, sortie du bouton = annulation.
   const [holding, setHolding] = useState(false)
   const holdTimer = useRef<number | undefined>(undefined)
-  const startHold = () => {
+  const holdDone = useRef(false)
+  const startHold = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (e.button !== 0 || !e.isPrimary) return
+    holdDone.current = false
     setHolding(true)
     holdTimer.current = window.setTimeout(() => {
+      holdDone.current = true
       setHolding(false)
       onReset()
-    }, 2000)
+    }, HOLD_MS)
   }
   const cancelHold = () => {
     setHolding(false)
     window.clearTimeout(holdTimer.current)
   }
+  const cancelIfOutside = (e: React.PointerEvent<HTMLButtonElement>) => {
+    // Le tactile capture implicitement le pointeur : pointerleave ne tire
+    // jamais au doigt, on vérifie donc la position à chaque mouvement.
+    const r = e.currentTarget.getBoundingClientRect()
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
+      cancelHold()
+    }
+  }
+  const onResetClick = () => {
+    // Un hold complété émet aussi un click : ne pas re-confirmer derrière.
+    if (holdDone.current) {
+      holdDone.current = false
+      return
+    }
+    // Clic bref, clavier ou techno d'assistance : confirmation classique.
+    if (window.confirm('Effacer le cas en cours et repartir de zéro ?')) onReset()
+  }
+  useEffect(() => () => window.clearTimeout(holdTimer.current), [])
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -111,15 +141,17 @@ export function ShareBar() {
         onPointerUp={cancelHold}
         onPointerLeave={cancelHold}
         onPointerCancel={cancelHold}
+        onPointerMove={holding ? cancelIfOutside : undefined}
         onContextMenu={(e) => e.preventDefault()}
-        onClick={(e) => {
-          // Activation clavier / techno d'assistance (pas de « maintien » possible).
-          if (e.detail === 0 && window.confirm('Effacer le cas en cours et repartir de zéro ?')) onReset()
-        }}
-        title="Maintenir 2 s pour effacer le cas en cours"
-        className="relative flex min-w-[8.5rem] select-none items-center justify-center gap-1.5 overflow-hidden rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+        onClick={onResetClick}
+        title="Maintenir 2 s pour effacer le cas en cours (ou clic bref : confirmation)"
+        className="relative flex min-w-[8.5rem] touch-none select-none items-center justify-center gap-1.5 overflow-hidden rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
       >
-        <span aria-hidden className={`pointer-events-none absolute inset-0 bg-rose-200 ${holding ? 'hold-fill-active' : 'hold-fill'}`} />
+        <span
+          aria-hidden
+          style={holding ? { transitionDuration: `${HOLD_MS}ms` } : undefined}
+          className={`pointer-events-none absolute inset-0 bg-rose-200 ${holding ? 'hold-fill-active' : 'hold-fill'}`}
+        />
         <span className="relative flex items-center gap-1.5">
           <RotateCcw size={15} /> {holding ? 'Maintenir…' : 'Réinitialiser'}
         </span>

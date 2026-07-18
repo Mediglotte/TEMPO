@@ -20,17 +20,24 @@ function formatElapsed(ms: number): string {
 export function Stopwatch() {
   const caseStartedAt = useCaseStore((s) => s.caseState.header.caseStartedAt)
   const stoppedAt = useCaseStore((s) => s.caseState.header.chronoStoppedAt)
+  const pausedMs = useCaseStore((s) => s.caseState.header.chronoPausedMs ?? 0)
   const setHeader = useCaseStore((s) => s.setHeader)
   const canStop = useUiStore((s) => canEditTrack(s.activeRole, s.roleChosen, 'intra'))
 
   const running = stoppedAt == null
   const now = useNow(running)
 
-  const elapsed = (stoppedAt ?? now) - caseStartedAt
+  const elapsed = (stoppedAt ?? now) - caseStartedAt - pausedMs
   const passedBadges = passedBadgeMilestones(activeProtocol.milestones ?? [], elapsed)
 
   const stop = () => setHeader({ chronoStoppedAt: Date.now() })
-  const resume = () => setHeader({ chronoStoppedAt: undefined })
+  // La reprise cumule la période d'arrêt : le chrono repart là où il s'était
+  // arrêté, sans déplacer caseStartedAt (les actions passées restent en place).
+  const resume = () =>
+    setHeader({
+      chronoStoppedAt: undefined,
+      chronoPausedMs: pausedMs + (stoppedAt != null ? Date.now() - stoppedAt : 0),
+    })
 
   return (
     <div

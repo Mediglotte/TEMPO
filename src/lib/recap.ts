@@ -1,4 +1,5 @@
 import type { ActionDef, ActionValue, CaseState, Protocol, SubField } from '../types/model'
+import { displayValue } from '../engine/computed'
 import { parseLog } from './evolutionLog'
 import { formatClock } from './timeline'
 
@@ -10,7 +11,8 @@ export interface RecapItem {
   valueText: string
 }
 
-function valueText(def: ActionDef, value: ActionValue): string {
+function valueText(def: ActionDef, rawValue: ActionValue): string {
+  const value = displayValue(rawValue)
   if (def.type === 'checkbox') return value === true ? 'fait' : ''
   if (value === null || value === undefined || value === '') return ''
   if (def.type === 'select') {
@@ -151,16 +153,18 @@ export function recapPrintHtml(items: RecapItem[], caseState: CaseState): string
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Récap TEMPO — ${esc(
     patient,
   )}</title><style>
+    /* Hex à dessein : CSS embarqué dans une chaîne JS (document.write), jamais
+       abaissé par le build — un poste ancien perdrait toutes les couleurs. */
     *{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;box-sizing:border-box}
-    body{margin:24px;color:oklch(0.208 0.04 265.755);line-height:1.5}
+    body{margin:24px;color:#0f172a;line-height:1.5}
     h1{font-size:18px;margin:0 0 2px}
-    .sub{color:oklch(0.554 0.041 257.417);font-size:12px;margin-bottom:12px}
+    .sub{color:#64748b;font-size:12px;margin-bottom:12px}
     table{border-collapse:collapse;width:100%;font-size:12px}
-    th,td{border-bottom:1px solid oklch(0.929 0.013 255.508);padding:6px 8px;text-align:start;vertical-align:top}
-    th{background:oklch(0.968 0.007 247.896);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:oklch(0.446 0.037 257.281)}
+    th,td{border-bottom:1px solid #e2e8f0;padding:6px 8px;text-align:start;vertical-align:top}
+    th{background:#f1f5f9;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#475569}
     td.t{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
     td.v{font-weight:600}
-    .foot{margin-top:14px;font-size:10px;color:oklch(0.446 0.037 257.281)}
+    .foot{margin-top:14px;font-size:10px;color:#475569}
     @media print{body{margin:12mm}}
   </style></head><body>
   <h1>TEMPO — partition d’urgence · récap chronologique</h1>
