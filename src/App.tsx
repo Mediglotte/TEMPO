@@ -20,6 +20,7 @@ import { Stopwatch } from './components/Stopwatch'
 import { useCaseStore } from './store/caseStore'
 import { useUiStore } from './store/uiStore'
 import { saveCase } from './share/persistence'
+import { clearCaseHash } from './share/urlState'
 import { useBroadcastSync } from './hooks/useBroadcastSync'
 
 export default function App() {
@@ -35,6 +36,13 @@ export default function App() {
   useEffect(() => {
     saveCase(caseState)
   }, [caseState])
+
+  // Une fois hydraté, on retire l'état encodé de l'URL : un hash périmé qui
+  // resterait dans la barre d'adresse écraserait les saisies suivantes au
+  // prochain rechargement.
+  useEffect(() => {
+    clearCaseHash()
+  }, [])
 
   return (
     <div className="mx-auto flex min-h-full max-w-[1500px] flex-col gap-4 p-3 sm:p-5">

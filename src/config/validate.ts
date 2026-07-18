@@ -72,7 +72,8 @@ export function validateProtocol(protocol: Protocol): string[] {
   /* --- actions calculées + sous-champs --------------------------------- */
   for (const action of protocol.actions) {
     if (action.type === 'computed') {
-      for (const input of action.computed?.inputs ?? []) {
+      const inputs = action.computed?.inputs ?? []
+      for (const input of inputs) {
         const refs =
           typeof input === 'string'
             ? [input]
@@ -81,6 +82,16 @@ export function validateProtocol(protocol: Protocol): string[] {
               : [input.ref]
         for (const ref of refs) checkRef(`Action calculée « ${action.id} »`, ref)
       }
+      // Clés de `weights` : une clé orpheline retombe silencieusement à 1
+      // (spec.weights?.[inp] ?? 1) — un score serait faux sans aucune erreur.
+      const stringInputs = new Set(inputs.filter((i): i is string => typeof i === 'string'))
+      for (const key of Object.keys(action.computed?.weights ?? {})) {
+        if (!stringInputs.has(key)) {
+          errors.push(
+            `Action calculée « ${action.id} » : poids « ${key} » sans input correspondant (poids ignoré, retombe à 1).`,
+          )
+        }
+      }
     }
     for (const sf of action.detail?.subFields ?? []) {
       if (sf.bindTo && !actionMap.has(sf.bindTo)) {
@@ -88,6 +99,72 @@ export function validateProtocol(protocol: Protocol): string[] {
           `Sous-champ « ${action.id}::${sf.id} » : bindTo inconnu « ${sf.bindTo} ».`,
         )
       }
+    }
+  }
+
+  /* --- cycles entre actions calculées ----------------------------------- */
+  // resolveValue est récursif sans garde : une boucle computed→computed
+  // provoquerait une RangeError (stack overflow) au premier evaluate.
+  {
+    // Seules les refs SANS « :: » récursent (resolveValue) : une ref de
+    // sous-champ lit une valeur stockée, jamais un calcul.
+    const inputRefsOf = (id: string): string[] => {
+      const a = actionMap.get(id)
+      if (a?.type !== 'computed') return []
+      const refs: string[] = []
+      for (const input of a.computed?.inputs ?? []) {
+        if (typeof input === 'string') refs.push(input)
+        else if ('any' in input) refs.push(...input.any.map((c) => c.ref))
+        else refs.push(input.ref)
+      }
+      return refs.filter((r) => !r.includes('::'))
+    }
+    const cycles = new Set<string>()
+    const visiting = new Set<string>()
+    const done = new Set<string>()
+    const visit = (id: string, path: string[]) => {
+      if (done.has(id)) return
+      if (visiting.has(id)) {
+        cycles.add(`Cycle d'actions calculées : ${[...path, id].join(' → ')}.`)
+        return
+      }
+      visiting.add(id)
+      for (const ref of inputRefsOf(id)) visit(ref, [...path, id])
+      visiting.delete(id)
+      done.add(id)
+    }
+    for (const action of protocol.actions) {
+      if (action.type === 'computed') visit(action.id, [])
+    }
+    errors.push(...cycles)
+  }
+
+  /* --- garde « filled » des comparaisons numériques ---------------------- */
+  // Une valeur non renseignée vaut 0 dans lt/lte : sans condition `filled`
+  // compagne sur la même action, la règle se déclencherait sur un cas vide.
+  {
+    const collectFilled = (cond: Condition, acc: Set<string>) => {
+      if (cond.kind === 'and' || cond.kind === 'or') {
+        cond.conditions.forEach((c) => collectFilled(c, acc))
+      } else if (cond.kind === 'filled') {
+        acc.add(cond.actionId)
+      }
+    }
+    const collectLtWithoutFilled = (ruleId: string, cond: Condition, filled: Set<string>) => {
+      if (cond.kind === 'and' || cond.kind === 'or') {
+        cond.conditions.forEach((c) => collectLtWithoutFilled(ruleId, c, filled))
+        return
+      }
+      if ((cond.kind === 'lt' || cond.kind === 'lte') && !filled.has(cond.actionId)) {
+        errors.push(
+          `Règle « ${ruleId} » : comparaison ${cond.kind} sur « ${cond.actionId} » sans garde filled — un champ vide vaut 0 et déclencherait la règle sur un cas vierge.`,
+        )
+      }
+    }
+    for (const rule of protocol.rules) {
+      const filled = new Set<string>()
+      collectFilled(rule.when, filled)
+      collectLtWithoutFilled(rule.id, rule.when, filled)
     }
   }
 

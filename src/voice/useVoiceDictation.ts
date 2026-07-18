@@ -204,7 +204,19 @@ export function useVoiceDictation(): VoiceApi {
     try {
       rec.start()
     } catch {
-      /* déjà démarré : on ignore */
+      // InvalidStateError : Chrome n'a pas fini de clôturer la session
+      // précédente. Sans replanification, l'UI resterait « à l'écoute »
+      // avec un micro définitivement mort.
+      window.setTimeout(() => {
+        if (!listeningRef.current || !recRef.current) return
+        try {
+          recRef.current.start()
+        } catch {
+          listeningRef.current = false
+          setListening(false)
+          setError('La reconnaissance vocale n’a pas pu redémarrer. Relancez la dictée.')
+        }
+      }, 300)
     }
   }, [])
 
@@ -231,6 +243,16 @@ export function useVoiceDictation(): VoiceApi {
     rec.onerror = (e) => {
       if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
         setError('Micro refusé. Autorisez le micro (et utilisez https ou localhost).')
+        listeningRef.current = false
+        setListening(false)
+      } else if (e.error === 'network' || e.error === 'audio-capture') {
+        // Sans arrêt explicite, onend relancerait immédiatement → boucle
+        // start/erreur/end infinie et silencieuse (hors-ligne, micro absent).
+        setError(
+          e.error === 'network'
+            ? 'Reconnaissance vocale indisponible (réseau). Réessayez plus tard.'
+            : 'Aucun micro détecté.',
+        )
         listeningRef.current = false
         setListening(false)
       }

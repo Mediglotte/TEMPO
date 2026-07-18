@@ -51,9 +51,12 @@ export function BurnBodyMap({ actionId, editable }: Props) {
       <svg viewBox="0 0 262 250" className="w-full select-none" role="img" aria-label="Schéma corporel de Wallace">
         {WALLACE_ZONES.map((zone) => {
           const on = isOn(zone)
-          const fill = on ? 'oklch(0.577 0.215 27.325)' : 'oklch(0.968 0.007 247.896)'
-          const stroke = on ? 'oklch(0.505 0.19 27.518)' : 'oklch(0.711 0.035 256.788)'
-          const textFill = on ? 'oklch(1 0 0)' : 'oklch(0.446 0.037 257.281)'
+          // Hex à dessein : ces couleurs vivent dans des chaînes JS injectées au
+          // runtime — le build n'abaisse que le CSS, et un fill oklch invalide
+          // rendrait les zones NOIRES sur un navigateur ancien (poste figé).
+          const fill = on ? '#dc2626' : '#f1f5f9'
+          const stroke = on ? '#b91c1c' : '#94a3b8'
+          const textFill = on ? '#ffffff' : '#475569'
           const cx =
             zone.shape.kind === 'circle' ? zone.shape.cx : zone.shape.x + zone.shape.w / 2
           const cy =
@@ -103,10 +106,10 @@ export function BurnBodyMap({ actionId, editable }: Props) {
             </g>
           )
         })}
-        <text x={60} y={244} textAnchor="middle" fontSize={11} fontWeight={700} fill="oklch(0.446 0.037 257.281)">
+        <text x={60} y={244} textAnchor="middle" fontSize={11} fontWeight={700} fill="#475569">
           Face
         </text>
-        <text x={200} y={244} textAnchor="middle" fontSize={11} fontWeight={700} fill="oklch(0.446 0.037 257.281)">
+        <text x={200} y={244} textAnchor="middle" fontSize={11} fontWeight={700} fill="#475569">
           Dos
         </text>
       </svg>

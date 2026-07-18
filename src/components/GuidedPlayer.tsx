@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Pause, Play, RotateCcw, Volume2, VolumeX, X } from 'lucide-react'
 import { GUIDED_BASE_MS, guidedSteps, speechRate, spokenText } from '../config/guidedScenario'
 import { cancelSpeech, isSynthesisSupported, speak } from '../voice/speech'
@@ -29,6 +29,14 @@ export function GuidedPlayer() {
   const setLayout = useUiStore((s) => s.setLayout)
   const setRecapOpen = useUiStore((s) => s.setRecapOpen)
   const setVoicePanelOpen = useUiStore((s) => s.setVoicePanelOpen)
+
+  // Vitesse et voix lues via des refs : les changer en cours d'étape ne doit
+  // PAS ré-exécuter l'étape (setValueAt + scroll + narration relue du début) —
+  // le nouveau réglage s'applique à partir de l'étape suivante.
+  const speedRef = useRef(speed)
+  speedRef.current = speed
+  const voiceOnRef = useRef(voiceOn)
+  voiceOnRef.current = voiceOn
 
   // Moteur de lecture : applique l'étape (action, bascule d'interface, synthèse),
   // met en évidence l'action, la fait défiler, LIT la narration à voix haute, puis
@@ -71,22 +79,23 @@ export function GuidedPlayer() {
     }
     const text = spokenText(step)
 
-    if (voiceOn && ttsSupported && text) {
+    const spd = speedRef.current
+    if (voiceOnRef.current && ttsSupported && text) {
       speak(
         text,
         undefined,
         () => {
           if (cancelled) return
-          doneTimer = setTimeout(advance, 300 / speed)
+          doneTimer = setTimeout(advance, 300 / speedRef.current)
         },
-        speechRate(speed),
+        speechRate(spd),
       )
       // Filet de sécurité (anti-blocage) : volontairement large, pour ne jamais
       // couper une narration réelle — il ne sert qu'en cas d'absence de fin de parole.
       const estMs = 4000 + text.length * 95
-      safetyTimer = setTimeout(advance, estMs / speed + 6000)
+      safetyTimer = setTimeout(advance, estMs / spd + 6000)
     } else {
-      doneTimer = setTimeout(advance, (step.holdMs ?? GUIDED_BASE_MS) / speed)
+      doneTimer = setTimeout(advance, (step.holdMs ?? GUIDED_BASE_MS) / spd)
     }
 
     return () => {
@@ -95,7 +104,7 @@ export function GuidedPlayer() {
       if (doneTimer) clearTimeout(doneTimer)
       if (safetyTimer) clearTimeout(safetyTimer)
     }
-  }, [status, index, speed, voiceOn, setValueAt, setActive, setIndex, finish, setLayout, setRecapOpen, setVoicePanelOpen])
+  }, [status, index, setValueAt, setActive, setIndex, finish, setLayout, setRecapOpen, setVoicePanelOpen])
 
   // Referme les panneaux quand on quitte la démo.
   useEffect(() => {

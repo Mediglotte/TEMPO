@@ -23,17 +23,22 @@ body {
   font-synthesis: none;
 }
 
-/* Focus clavier visible sur tous les contrôles (les inputs gardent leur focus:border-*). */
+/* Focus clavier visible sur tous les contrôles (les inputs gardent leur focus:border-*).
+   Le raccourci `outline` n'est pas abaissé par le minifieur : repli hex d'abord. */
 button:focus-visible,
 a:focus-visible,
 summary:focus-visible {
+  outline: 2px solid #6366f1;
   outline: 2px solid oklch(0.585 0.233 277.117);
   outline-offset: 2px;
 }
 
-/* Placeholders lisibles par défaut (le gray-400 du preflight tombe à ~2,5:1 sur blanc) ;
-   les utilitaires Tailwind placeholder:* restent prioritaires. */
-::placeholder {
+/* Placeholders lisibles par défaut (le gray-400 du preflight tombe à ~2,5:1 sur blanc).
+   Sélecteurs alignés sur ceux du preflight (input/textarea, spécificité 0,0,2) :
+   un ::placeholder nu perdrait systématiquement contre lui. Les utilitaires
+   Tailwind placeholder:* restent prioritaires. */
+input::placeholder,
+textarea::placeholder {
   color: oklch(0.554 0.041 257.417);
 }
 

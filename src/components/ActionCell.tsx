@@ -4,6 +4,7 @@ import { useCaseStore } from '../store/caseStore'
 import { canEditTrack, useUiStore } from '../store/uiStore'
 import { usePlayerStore } from '../store/playerStore'
 import { useResolvedValue } from '../store/selectors'
+import { displayValue } from '../engine/computed'
 import { isFilledValue } from '../lib/case'
 import { parseLog } from '../lib/evolutionLog'
 import { iconForCategory } from '../lib/icons'
@@ -40,7 +41,9 @@ export function ActionCell({ action, x, top, effect, flow = false }: Props) {
   const CategoryIcon = iconForCategory(action.category)
 
   const classes = [
-    'rounded-lg border px-2.5 py-1.5 text-start shadow-sm transition-[color,background-color,border-color,opacity,box-shadow,transform]',
+    // left/top : les cartes absolues glissent (au lieu de sauter) quand un
+    // horodatage les repositionne sur la timeline — comportement du transition-all d'origine.
+    'rounded-lg border px-2.5 py-1.5 text-start shadow-sm transition-[color,background-color,border-color,opacity,box-shadow,transform,left,top]',
     'flex flex-col justify-between overflow-hidden',
     flow ? 'relative w-full' : 'absolute',
   ]
@@ -123,7 +126,7 @@ export function ActionCell({ action, x, top, effect, flow = false }: Props) {
           </button>
         ) : (
           <>
-            {renderEditor(action, value, locked, !editable, setValue)}
+            {renderEditor(action, value, locked, !editable, setValue, flow)}
             {entry?.completedAt != null && (checkboxDone || filled) && (
               <span className="ms-auto text-[10px] tabular-nums text-slate-500">
                 {formatClock(entry.completedAt)}
@@ -148,8 +151,15 @@ function renderEditor(
   locked: boolean,
   disabled: boolean,
   setValue: (id: string, v: ActionValue) => void,
+  flow: boolean,
 ) {
   if (locked) return <span className="text-[10px] italic text-slate-400">verrouillé</span>
+
+  // En vue Portée (cartes absolues), le créneau vertical est figé à PILL_H :
+  // un éditeur mobile de 32 px ferait déborder la carte sur la rangée du
+  // dessous. La taille 16 px anti-zoom iOS n'est donc servie qu'en mode flux
+  // (Pupitre — la vue par défaut sur mobile).
+  const sizeCls = flow ? 'h-8 text-base sm:h-6 sm:text-[11px]' : 'h-6 text-[11px]'
 
   const disabledCls = disabled ? 'cursor-not-allowed bg-slate-50 text-slate-500' : ''
 
@@ -162,7 +172,7 @@ function renderEditor(
           value={value === null || value === undefined ? '' : String(value)}
           placeholder={action.placeholder}
           onChange={(e) => setValue(action.id, e.target.value === '' ? null : Number(e.target.value))}
-          className={`h-8 w-16 rounded border border-slate-300 px-1 text-base tabular-nums focus:border-slate-500 focus:outline-none sm:h-6 sm:text-[11px] ${disabledCls}`}
+          className={`${sizeCls} w-16 rounded border border-slate-300 px-1 tabular-nums focus:border-slate-500 focus:outline-none ${disabledCls}`}
         />
       )
     case 'select':
@@ -171,7 +181,7 @@ function renderEditor(
           disabled={disabled}
           value={typeof value === 'string' ? value : ''}
           onChange={(e) => setValue(action.id, e.target.value || null)}
-          className={`h-8 max-w-[150px] rounded border border-slate-300 bg-white px-1 text-base focus:border-slate-500 focus:outline-none sm:h-6 sm:text-[11px] ${disabledCls}`}
+          className={`${sizeCls} max-w-[150px] rounded border border-slate-300 bg-white px-1 focus:border-slate-500 focus:outline-none ${disabledCls}`}
         >
           <option value="">—</option>
           {action.options?.map((o) => (
@@ -189,13 +199,13 @@ function renderEditor(
           value={typeof value === 'string' ? value : ''}
           placeholder={action.placeholder}
           onChange={(e) => setValue(action.id, e.target.value || null)}
-          className={`h-8 w-[150px] rounded border border-slate-300 px-1 text-base focus:border-slate-500 focus:outline-none sm:h-6 sm:text-[11px] ${disabledCls}`}
+          className={`${sizeCls} w-[150px] rounded border border-slate-300 px-1 focus:border-slate-500 focus:outline-none ${disabledCls}`}
         />
       )
     case 'computed':
       return (
         <span className="whitespace-nowrap rounded bg-slate-800 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-white">
-          {action.unit ? `${value} ${action.unit}` : value}
+          {action.unit ? `${displayValue(value)} ${action.unit}` : displayValue(value)}
         </span>
       )
     case 'checkbox':

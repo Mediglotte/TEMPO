@@ -1,9 +1,9 @@
-import { useEffect } from 'react'
 import { Check, Clock, X } from 'lucide-react'
 import type { ActionValue, SubField } from '../types/model'
 import { protocolIndex } from '../config'
 import { useCaseStore } from '../store/caseStore'
 import { canEditTrack, useUiStore } from '../store/uiStore'
+import { useEscapeToClose } from '../hooks/useEscapeToClose'
 import { formatClock } from '../lib/timeline'
 import { BurnBodyMap } from './BurnBodyMap'
 import { DerivedCriteria } from './DerivedCriteria'
@@ -22,14 +22,7 @@ export function ActionDetailPanel() {
   )
 
   // Fermeture au clavier (Échap), comme le clic sur l'overlay.
-  useEffect(() => {
-    if (!openActionId) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeAction()
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [openActionId, closeAction])
+  useEscapeToClose(Boolean(openActionId), closeAction)
 
   if (!action) return null
 

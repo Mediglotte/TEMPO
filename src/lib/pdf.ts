@@ -1,6 +1,7 @@
 import type { ActionDef, ActionValue, CaseState, Protocol } from '../types/model'
 import { actionIndex } from '../config'
 import { resolveValue } from '../engine/evaluate'
+import { displayValue } from '../engine/computed'
 import { isFilledValue } from './case'
 import { formatClock } from './timeline'
 
@@ -11,7 +12,9 @@ function formatValue(action: ActionDef, value: ActionValue): string {
     case 'select':
       return action.options?.find((o) => o.value === value)?.label ?? String(value ?? '')
     case 'computed':
-      return action.id.includes('vittel') ? `${value}\u00A0critère(s)` : String(value)
+      return action.id.includes('vittel')
+        ? `${displayValue(value)}\u00A0critère(s)`
+        : String(displayValue(value))
     case 'number':
       return value != null && value !== '' ? `${value}${action.unit ? '\u00A0' + action.unit : ''}` : ''
     default:
@@ -64,7 +67,7 @@ export async function exportCasePdf(caseState: CaseState, protocol: Protocol): P
 
   const h = caseState.header
   const now = Date.now()
-  const elapsedMs = (h.chronoStoppedAt ?? now) - h.caseStartedAt
+  const elapsedMs = (h.chronoStoppedAt ?? now) - h.caseStartedAt - (h.chronoPausedMs ?? 0)
   const elapsedMin = Math.max(0, Math.round(elapsedMs / 60000))
   line(`Régulateur\u00A0: ${h.regulateurName || '—'}    SMUR/VSAV\u00A0: ${h.smurName || '—'}`, { size: 10 })
   line(`Service receveur\u00A0: ${h.serviceReceveur || '—'}`, { size: 10 })
@@ -79,7 +82,7 @@ export async function exportCasePdf(caseState: CaseState, protocol: Protocol): P
       .filter((a) => a.trackId === track.id)
       .map((a) => ({ a, value: resolveValue(a.id, caseState, actionIndex), at: caseState.values[a.id]?.completedAt }))
       .filter(({ a, value }) => isDone(a, value))
-      .sort((x, z) => (x.at ?? Infinity) - (z.at ?? Infinity))
+      .sort((x, z) => (x.at ?? Number.MAX_SAFE_INTEGER) - (z.at ?? Number.MAX_SAFE_INTEGER))
 
     ensure(28)
     line(track.label, { size: 13, style: 'bold', color: [15, 23, 42], gap: 2 })

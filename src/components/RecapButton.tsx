@@ -1,26 +1,23 @@
-import { useEffect } from 'react'
+import { useCallback } from 'react'
 import { ListOrdered, Printer, X } from 'lucide-react'
 import { activeProtocol, actionIndex } from '../config'
 import { useCaseStore } from '../store/caseStore'
 import { useUiStore } from '../store/uiStore'
 import { buildRecap, recapPrintHtml } from '../lib/recap'
 import { formatClock } from '../lib/timeline'
+import { useEscapeToClose } from '../hooks/useEscapeToClose'
 
 export function RecapButton() {
   const open = useUiStore((s) => s.recapOpen)
   const setOpen = useUiStore((s) => s.setRecapOpen)
   const caseState = useCaseStore((s) => s.caseState)
-  const items = buildRecap(caseState, activeProtocol, actionIndex)
+  // Le récap n'est construit que modale ouverte : le reconstruire à chaque
+  // frappe (modale fermée) était le seul travail O(protocole) du chemin chaud.
+  const items = open ? buildRecap(caseState, activeProtocol, actionIndex) : []
 
   // Fermeture au clavier (Échap), comme le clic sur l'overlay.
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [open, setOpen])
+  const close = useCallback(() => setOpen(false), [setOpen])
+  useEscapeToClose(open, close)
 
   const print = () => {
     const html = recapPrintHtml(items, caseState)
