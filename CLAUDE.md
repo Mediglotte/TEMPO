@@ -23,7 +23,7 @@ npm test               # vitest run   (npm run test:watch pour le mode watch)
 TypeScript strict (`noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`) : garder le build `tsc` vert.
 
 ## Déploiement
-GitHub Pages : chaque push sur `main` déclenche `.github/workflows/deploy.yml` → https://mediglotte.github.io/TEMPO/.
+GitHub Pages : chaque push sur `main` déclenche `.github/workflows/deploy.yml` → https://pierre-balaz.github.io/TEMPO/.
 Voir `docs/DEPLOYMENT.md` pour le détail (Pages, serveur de synchro, runbook admin).
 
 ## Architecture (piloté par la config)
