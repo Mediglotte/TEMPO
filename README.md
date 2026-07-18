@@ -23,7 +23,7 @@ régul et l'intra-hosp ; score ABC ≥ 2 → transfusion massive ; grade → niv
 
 ## 🌐 Démo en ligne
 
-**https://mediglotte.github.io/TEMPO/**
+**https://pierre-balaz.github.io/TEMPO/**
 
 Chaque merge sur `main` est **déployé automatiquement** sur GitHub Pages
 (workflow [`deploy.yml`](.github/workflows/deploy.yml)). Détails et runbook :

@@ -22,7 +22,7 @@ export interface Env {
 const ROOM_PATH = /\/room\/([A-Za-z0-9-]{1,80})$/
 
 const ALLOWED_ORIGINS = new Set([
-  'https://mediglotte.github.io',
+  'https://pierre-balaz.github.io',
   'http://localhost:5173',
   'http://localhost:4173',
 ])
